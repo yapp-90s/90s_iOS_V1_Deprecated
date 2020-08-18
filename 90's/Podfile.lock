@@ -1,0 +1,46 @@
+PODS:
+  - Alamofire (5.2.2)
+  - AlamofireImage (4.1.0):
+    - Alamofire (~> 5.1)
+  - KakaoOpenSDK (1.23.4):
+    - KakaoOpenSDK/KakaoCommon (= 1.23.4)
+    - KakaoOpenSDK/KakaoLink (= 1.23.4)
+    - KakaoOpenSDK/KakaoMessageTemplate (= 1.23.4)
+    - KakaoOpenSDK/KakaoNavi (= 1.23.4)
+    - KakaoOpenSDK/KakaoOpenSDK (= 1.23.4)
+    - KakaoOpenSDK/KakaoPlusFriend (= 1.23.4)
+  - KakaoOpenSDK/KakaoCommon (1.23.4)
+  - KakaoOpenSDK/KakaoLink (1.23.4):
+    - KakaoOpenSDK/KakaoCommon
+    - KakaoOpenSDK/KakaoMessageTemplate
+  - KakaoOpenSDK/KakaoMessageTemplate (1.23.4)
+  - KakaoOpenSDK/KakaoNavi (1.23.4):
+    - KakaoOpenSDK/KakaoCommon
+  - KakaoOpenSDK/KakaoOpenSDK (1.23.4):
+    - KakaoOpenSDK/KakaoMessageTemplate
+  - KakaoOpenSDK/KakaoPlusFriend (1.23.4):
+    - KakaoOpenSDK/KakaoCommon
+  - lottie-ios (3.1.8)
+
+DEPENDENCIES:
+  - Alamofire
+  - AlamofireImage
+  - KakaoOpenSDK
+  - lottie-ios
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - AlamofireImage
+    - KakaoOpenSDK
+    - lottie-ios
+
+SPEC CHECKSUMS:
+  Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
+  AlamofireImage: c4a2ba349885fb3064feb74d2e547bd42ce9be10
+  KakaoOpenSDK: a9d5d50c1df4924515bfb371a6b8323af5e4c793
+  lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
+
+PODFILE CHECKSUM: b2b60565eba131cdcb3f580242c71eba33639756
+
+COCOAPODS: 1.9.3
