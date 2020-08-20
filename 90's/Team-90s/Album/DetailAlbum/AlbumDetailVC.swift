@@ -12,21 +12,29 @@ import KakaoLink
 class AlbumDetailVC : UIViewController {
     @IBOutlet weak var photoCollectionView: UICollectionView!
     @IBOutlet weak var addPhotoBtn: UIButton!
+    @IBAction func touchAddPhotoBtn(_ sender : UIButton){ switchHideView(value: isAlbumComplete) }
     // Top View 설정
     @IBOutlet weak var inviteBtn: UIButton!
     @IBOutlet weak var infoBtn: UIButton!
-    @IBAction func backBtn(_ sender: UIButton) { self.navigationController?.popToRootViewController(animated: true) }
+    @IBAction func touchInviteBtn(_ sender: UIButton) { inviteSetting() }
+    @IBAction func backBtn(_ sender: UIButton) {
+        self.navigationController?.popToRootViewController(animated: true) }
     // 사진 추가 버튼을 눌렀을 때
     @IBOutlet weak var hideView: UIView!
     @IBOutlet weak var hideWhiteView: UIView!
     @IBOutlet weak var hidewhiteviewBottom: NSLayoutConstraint!
     @IBOutlet weak var hideAddAlbumBtn: UIButton!
     @IBOutlet weak var hideAddPhotoBtn: UIButton!
+    @IBAction func touchHideAddAlbumBtn(_ sender : UIButton) {
+        present(galleryPicker, animated: true){
+            self.switchHideView(value: true)
+        }}
     @IBAction func cancleHideView(_ sender: UIButton) { switchHideView(value: true) }
     
     // 사진 확대 시
     @IBOutlet weak var hideImageZoom: UIImageView!
     @IBAction func touchhideShareCompleteBtn(_ sender: UIButton) { inviteSetting() }
+    
     
     // old filter
     private let context = CIContext(options: nil)
@@ -75,8 +83,6 @@ class AlbumDetailVC : UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.tabBarController?.tabBar.isHidden = true
-        addPhotoBtn.isHidden = isDefaultUser ? true : false
-        print("is default user = \(isDefaultUser)")
         NetworkSetting()
         photoCollectionView.reloadData()
     }
@@ -85,7 +91,6 @@ class AlbumDetailVC : UIViewController {
         super.viewDidLoad()
         delegateSetting()
         defaultSetting()
-        buttonSetting()
     }
 }
 
@@ -101,16 +106,10 @@ extension AlbumDetailVC {
     func defaultSetting(){
         hideView.isHidden = true
         hideWhiteView.layer.cornerRadius = 15
+        hideAddPhotoBtn.addTarget(self, action: #selector(touchCameraBtn), for: .touchUpInside)
         // 순서 바꾸기
         longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(self.handleLongGesture(gesture:)))
         photoCollectionView.addGestureRecognizer(longPressGesture)
-    }
-    
-    func buttonSetting(){
-        inviteBtn.addTarget(self, action: #selector(touchInivteBtn), for: .touchUpInside)
-        addPhotoBtn.addTarget(self, action: #selector(touchAddPhotoBtn), for: .touchUpInside)
-        hideAddAlbumBtn.addTarget(self, action: #selector(touchAlbumBtn), for: .touchUpInside)
-        hideAddPhotoBtn.addTarget(self, action: #selector(touchCameraBtn), for: .touchUpInside)
     }
 }
 
@@ -154,14 +153,10 @@ extension AlbumDetailVC {
     func switchAlbumComplete(value : Bool){
         switch value {
         case false :
-            addPhotoBtn.isEnabled = true
             addPhotoBtn.isHidden = false
-            inviteBtn.isEnabled = true
             inviteBtn.isHidden = false
         case true:
-            addPhotoBtn.isEnabled = false
             addPhotoBtn.isHidden = true
-            inviteBtn.isEnabled = false
             inviteBtn.isHidden = true
             networkAddCount()
         }
@@ -363,6 +358,7 @@ extension AlbumDetailVC {
         }
         isAlbumComplete = photoUidArray.count+1 <= albumMaxCount ? false : true
         switchAlbumComplete(value: isAlbumComplete)
+        addPhotoBtn.isHidden = isDefaultUser ? true : false
     }
     
     // 앨범 완성 후 - 앨범 낡기 적용
@@ -402,20 +398,6 @@ extension AlbumDetailVC {
 //        self.present(goNextVC, animated: true)
         }
         
-    }
-    
-    @objc func touchAlbumBtn(){
-        present(galleryPicker, animated: true){
-            self.switchHideView(value: true)
-        }
-    }
-    
-    @objc func touchInivteBtn(){
-        inviteSetting()
-    }
-    
-    @objc func touchAddPhotoBtn() {
-        switchHideView(value: isAlbumComplete)
     }
     
     @objc func handleLongGesture(gesture : UILongPressGestureRecognizer){
