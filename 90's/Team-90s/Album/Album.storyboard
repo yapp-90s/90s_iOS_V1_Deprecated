@@ -1047,6 +1047,9 @@
                                             <constraint firstAttribute="width" constant="36" id="2zA-Z8-4Vg"/>
                                         </constraints>
                                         <state key="normal" title="초대" image="iconInvitation"/>
+                                        <connections>
+                                            <action selector="touchInviteBtn:" destination="xQZ-oo-bAJ" eventType="touchUpInside" id="4Ef-yb-woy"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0YD-Gg-ahy">
                                         <rect key="frame" x="365" y="12" width="44" height="54"/>
@@ -1183,6 +1186,9 @@
                                     <constraint firstAttribute="height" constant="63" id="wBX-qU-id4"/>
                                 </constraints>
                                 <state key="normal" image="addPhotoButton"/>
+                                <connections>
+                                    <action selector="touchAddPhotoBtn:" destination="xQZ-oo-bAJ" eventType="touchUpInside" id="K49-BX-QnW"/>
+                                </connections>
                             </button>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ztk-xx-6Al" userLabel="hideView">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -1197,6 +1203,9 @@
                                                     <constraint firstAttribute="width" constant="110" id="aP8-un-B4A"/>
                                                 </constraints>
                                                 <state key="normal" title="Button" image="galleryIcon"/>
+                                                <connections>
+                                                    <action selector="touchHideAddAlbumBtn:" destination="xQZ-oo-bAJ" eventType="touchUpInside" id="i82-U7-Cbs"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gW-XF-dnC">
                                                 <rect key="frame" x="346" y="8" width="60" height="60"/>
