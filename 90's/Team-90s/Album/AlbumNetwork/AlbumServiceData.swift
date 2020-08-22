@@ -15,6 +15,7 @@ struct AlbumService : APIManager {
     typealias completeAlbumService = (AFDataResponse<Any>) -> ()
     typealias completeAlbumPasswordService = (DataResponse<Optional<Data>, AFError>) -> ()
     typealias completePhotoDownloadService = (DataResponse<UIImage, AFError>) -> ()
+    
     let header : HTTPHeaders =  [
         "Content-Type" : "application/json"
     ]

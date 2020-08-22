@@ -32,7 +32,6 @@ class AlbumMainVC : UIViewController {
         super.viewWillAppear(animated)
         networkSetting()
         self.tabBarController?.tabBar.isHidden = false
-        
     }
     
     override func viewDidLoad() {
@@ -73,7 +72,9 @@ extension AlbumMainVC {
                     self.albumUidArray = value.map { $0.uid }
                     self.albumNameArray = value.map { $0.name }
                     self.albumCoverUidArray = value.map { $0.cover.uid }
-                    self.albumUidArray.isEmpty ? self.switchAlbumEmptyView(value: false) : self.switchAlbumEmptyView(value: true)
+                    self.albumUidArray.isEmpty ?
+                        self.switchAlbumEmptyView(value: false) :
+                        self.switchAlbumEmptyView(value: true)
                     self.albumCollectionView.reloadData()
                 case 401:
                     print("\(status) : bad request, no warning in Server")

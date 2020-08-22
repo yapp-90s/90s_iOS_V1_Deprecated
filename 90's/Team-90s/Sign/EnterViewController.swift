@@ -28,8 +28,13 @@ class EnterViewController: UIViewController {
     var isInitialAppleLogin = true
     
     override func viewWillAppear(_ animated: Bool) {
-        
-        if(initialEnter){
+        if UserDefaults.standard.value(forKey: "jwt") != nil {
+            print("user is still login ")
+        }
+        if UserDefaults.standard.value(forKey: "defaultjwt") != nil {
+            print("default user is still login")
+        }
+        if initialEnter {
             autoLogin()
         }
     }
@@ -214,7 +219,10 @@ class EnterViewController: UIViewController {
                     let decoder = JSONDecoder()
                     guard let defaultResult = try? decoder.decode(SignUpResult.self, from: data) else { return }
                     guard let jwt = defaultResult.jwt else { return }
+
                     UserDefaults.standard.set(jwt, forKey: "defaultjwt")
+                     UserDefaults.standard.set(nil, forKey: "jwt")
+                    UserDefaults.standard.synchronize()
                     
                     let appDelegate = UIApplication.shared.delegate as! AppDelegate
                     appDelegate.switchTab()
@@ -250,6 +258,9 @@ class EnterViewController: UIViewController {
                     UserDefaults.standard.set(password, forKey: "password")
                     UserDefaults.standard.set(social, forKey: "social")
                     UserDefaults.standard.set(self.isAppleId, forKey: "isAppleId")
+                    
+                    UserDefaults.standard.set("", forKey: "defaultjwt")
+                    UserDefaults.standard.synchronize()
                     
                     isDefaultUser = false
                     //이미 가입된 애플아이디 && revoked상태 이면 탈퇴시키고 전화번호 입력화면으로 이동

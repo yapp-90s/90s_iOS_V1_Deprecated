@@ -92,7 +92,10 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
                     UserDefaults.standard.set(false, forKey: "social")
                     UserDefaults.standard.set(jwt, forKey: "jwt")
                     
+                    UserDefaults.standard.set("", forKey: "defaultjwt")
+                    UserDefaults.standard.synchronize()
                     isDefaultUser = false
+                    
                     let appDelegate = UIApplication.shared.delegate as! AppDelegate
                     appDelegate.switchTab()
                     break
