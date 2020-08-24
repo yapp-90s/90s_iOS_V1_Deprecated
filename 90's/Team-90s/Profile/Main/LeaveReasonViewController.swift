@@ -53,7 +53,7 @@ class LeaveReasonViewController: UIViewController {
                     if let appDomain = Bundle.main.bundleIdentifier {
                         UserDefaults.standard.removePersistentDomain(forName: appDomain)
                     }
-                    UserDefaults.standard.synchronize()
+
                     let appDelegate = UIApplication.shared.delegate as! AppDelegate
                     appDelegate.switchEnterView()
                     break

@@ -93,7 +93,7 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
                     UserDefaults.standard.set(jwt, forKey: "jwt")
                     
                     UserDefaults.standard.set("", forKey: "defaultjwt")
-                    UserDefaults.standard.synchronize()
+                    print("user jwt = \(jwt)")
                     isDefaultUser = false
                     
                     let appDelegate = UIApplication.shared.delegate as! AppDelegate

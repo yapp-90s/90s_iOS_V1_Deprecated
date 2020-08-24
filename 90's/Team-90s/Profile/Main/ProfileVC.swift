@@ -58,9 +58,7 @@ class ProfileVC: UIViewController {
     
     @IBAction func goLogin(_ sender: Any) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        UserDefaults.standard.set("", forKey: "defaultjwt")
         UserDefaults.standard.removeObject(forKey: "defaultjwt")
-        UserDefaults.standard.synchronize()
         appDelegate.switchEnterView()
     }
     
@@ -69,7 +67,6 @@ class ProfileVC: UIViewController {
         if let appDomain = Bundle.main.bundleIdentifier {
             UserDefaults.standard.removePersistentDomain(forName: appDomain)
         }
-        UserDefaults.standard.synchronize()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.switchEnterView()
     }
