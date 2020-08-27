@@ -177,6 +177,7 @@ extension AlbumDetailVC {
     }
     
     func inviteSetting(){
+        inviteBtn.isHidden = isDefaultUser ? true : false
         let templeteId = "24532"
            
         KLKTalkLinkCenter.shared().sendCustom(withTemplateId: templeteId, templateArgs: nil, success: {(warningMsg, argumentMsg) in
