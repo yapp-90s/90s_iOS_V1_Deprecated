@@ -83,9 +83,8 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
                 switch status {
                 case 200:
                     guard let data = response.data else { return }
-                    let decoder = JSONDecoder()
-                    let loginResult = try? decoder.decode(SignUpResult.self, from: data)
-                    guard let jwt = loginResult?.jwt else { return }
+                    guard let loginResult = try? JSONDecoder().decode(SignUpResult.self, from: data) else {return}
+                    guard let jwt = loginResult.jwt else { return }
                     
                     UserDefaults.standard.set(self.email, forKey: "email")
                     UserDefaults.standard.set(self.pass, forKey: "password")
@@ -93,7 +92,7 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
                     UserDefaults.standard.set(jwt, forKey: "jwt")
                     
                     UserDefaults.standard.set("", forKey: "defaultjwt")
-                    print("user jwt = \(jwt)")
+                   
                     isDefaultUser = false
                     
                     let appDelegate = UIApplication.shared.delegate as! AppDelegate

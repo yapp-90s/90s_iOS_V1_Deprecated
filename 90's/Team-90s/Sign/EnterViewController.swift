@@ -12,6 +12,7 @@ import KakaoOpenSDK
 
 var isDefaultUser : Bool = false
 
+
 class EnterViewController: UIViewController {
     
     @IBOutlet weak var loginBtn: UIButton!
@@ -209,6 +210,7 @@ class EnterViewController: UIViewController {
                 switch status {
                 case 200:
                     isDefaultUser = true
+                    
                     guard let data = response.data else { return }
                     let decoder = JSONDecoder()
                     guard let defaultResult = try? decoder.decode(SignUpResult.self, from: data) else { return }
@@ -241,8 +243,7 @@ class EnterViewController: UIViewController {
                 switch status {
                 case 200:
                     guard let data = response.data else { return }
-                    let decoder = JSONDecoder()
-                    guard let loginResult = try? decoder.decode(SignUpResult.self, from: data) else { return }
+                    guard let loginResult = try? JSONDecoder().decode(SignUpResult.self, from: data) else { return }
                     guard let jwt = loginResult.jwt else { return }
                     
                     //로그인 될때마다 jwt 갱신해서 저장

@@ -9,8 +9,9 @@
 import Alamofire
 import AlamofireImage
 
+
 struct AlbumService : APIManager {
-    static let shared = AlbumService()
+    static var shared = AlbumService()
 
     typealias completeAlbumService = (AFDataResponse<Any>) -> ()
     typealias completeAlbumPasswordService = (DataResponse<Optional<Data>, AFError>) -> ()
@@ -20,20 +21,37 @@ struct AlbumService : APIManager {
         "Content-Type" : "application/json"
     ]
     
-    let tokenHeader : HTTPHeaders = [
+    var tokenHeader : HTTPHeaders = [
         "Content-Type" : "application/json",
         "X-AUTH-TOKEN" : isDefaultUser ?
          UserDefaults.standard.value(forKey: "defaultjwt") as! String :
          UserDefaults.standard.value(forKey: "jwt") as! String
     ]
    
-    let photoHeader : HTTPHeaders =
+    var photoHeader : HTTPHeaders =
     [
         "Content-type": "multipart/form-data",
         "X-AUTH-TOKEN" : isDefaultUser ?
             UserDefaults.standard.value(forKey: "defaultjwt") as! String :
             UserDefaults.standard.value(forKey: "jwt") as! String
     ]
+    
+    mutating func resetToken(){
+        self.tokenHeader = [
+            "Content-Type" : "application/json",
+            "X-AUTH-TOKEN" : isDefaultUser ?
+             UserDefaults.standard.value(forKey: "defaultjwt") as! String :
+             UserDefaults.standard.value(forKey: "jwt") as! String
+        ]
+        self.photoHeader =
+        [
+            "Content-type": "multipart/form-data",
+            "X-AUTH-TOKEN" : isDefaultUser ?
+                UserDefaults.standard.value(forKey: "defaultjwt") as! String :
+                UserDefaults.standard.value(forKey: "jwt") as! String
+        ]
+    }
+    
 
     // Add User, post, 친구 추가
     func albumAddUser(albumUid : Int,  name: String, role : String, userUid : Int, completion: @escaping(completeAlbumService)){

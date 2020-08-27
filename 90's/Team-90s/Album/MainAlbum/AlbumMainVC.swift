@@ -63,6 +63,7 @@ extension AlbumMainVC {
        }
     
     func networkSetting(){
+        AlbumService.shared.resetToken()
         AlbumService.shared.albumGetAlbums(completion: { response in
             if let status = response.response?.statusCode {
                 switch status {
