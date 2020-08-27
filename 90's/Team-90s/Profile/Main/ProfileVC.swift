@@ -109,9 +109,10 @@ class ProfileVC: UIViewController {
         settingTableView.delegate = self
         settingTableView.dataSource = self
         guestLoginBtn.layer.cornerRadius = 8.0
+        leaveBtn.isEnabled = isDefaultUser ? false : true
         getProfile()
     }
-    
+
     func getProfile(){
         guard let jwt = UserDefaults.standard.string(forKey: "jwt") else { return }
         

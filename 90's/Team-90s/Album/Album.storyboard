@@ -1887,7 +1887,7 @@
                                                 </constraints>
                                                 <state key="normal" image="addMember"/>
                                                 <connections>
-                                                    <action selector="inviteBtn:" destination="ZwE-5H-XaB" eventType="touchUpInside" id="MPb-hU-zJ5"/>
+                                                    <action selector="touchInviteBtn:" destination="ZwE-5H-XaB" eventType="touchUpInside" id="0sV-zP-cED"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zbx-Pp-odo">
@@ -2052,14 +2052,18 @@
                         <outlet property="albumNameLabel" destination="faa-Sz-1RU" id="9SN-Ta-R5l"/>
                         <outlet property="albumPasswordCopyBtn" destination="Zbx-Pp-odo" id="sbZ-4w-W2i"/>
                         <outlet property="albumPasswordUploadBtn" destination="uaC-4k-uPw" id="XNL-gG-PZH"/>
+                        <outlet property="copyPasswdBtn" destination="Zbx-Pp-odo" id="Sbh-4r-0n9"/>
                         <outlet property="hideCancleBtn" destination="Ldk-YC-a84" id="k3C-0M-PbK"/>
                         <outlet property="hideCompleteBtn" destination="smx-YZ-zeZ" id="Lda-og-h97"/>
                         <outlet property="hideLabel" destination="ntA-l3-TFA" id="eDg-5L-MYV"/>
                         <outlet property="hideView" destination="YCX-hA-EGl" id="NG6-33-UgV"/>
                         <outlet property="hideWhiteView" destination="zQg-Hh-LUS" id="6on-EQ-wHw"/>
                         <outlet property="hideWhiteViewBottom" destination="r1O-yT-xL2" id="O0Q-nU-JAH"/>
+                        <outlet property="inviteBtn" destination="Fz7-Ep-JFz" id="rir-OY-YOF"/>
                         <outlet property="memberTableConst" destination="cmE-qA-G0v" id="28Z-qq-20L"/>
                         <outlet property="memberTableView" destination="pj7-Nw-P4u" id="xPl-wr-ka6"/>
+                        <outlet property="newPasswdBtn" destination="uaC-4k-uPw" id="vJk-Ox-oJ8"/>
+                        <outlet property="quitBtn" destination="9fO-Pc-rcl" id="JRO-Wx-vy9"/>
                         <outlet property="scroll" destination="e9X-x6-QQa" id="tAp-eI-yjB"/>
                     </connections>
                 </viewController>
