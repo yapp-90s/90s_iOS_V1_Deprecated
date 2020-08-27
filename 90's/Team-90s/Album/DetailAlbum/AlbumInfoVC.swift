@@ -29,10 +29,16 @@ class AlbumInfoVC: UIViewController {
     @IBOutlet weak var memberTableView: UITableView!
     @IBOutlet weak var scroll: UIScrollView!
     @IBOutlet weak var memberTableConst: NSLayoutConstraint!
+    
+    @IBOutlet weak var copyPasswdBtn: UIButton!
+    @IBOutlet weak var newPasswdBtn: UIButton!
+    @IBOutlet weak var inviteBtn: UIButton!
+    @IBOutlet weak var quitBtn: UIButton!
+    
     @IBAction func backBtn(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }
-    @IBAction func inviteBtn(_ sender: UIButton) {
+    @IBAction func touchInviteBtn(_ sender: UIButton) {
         inviteSetting()
     }
     @IBAction func quitMemberBtn(_ sender: UIButton) {
@@ -68,6 +74,7 @@ class AlbumInfoVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         networkSetting()
+        defaultUserSetting()
     }
     
     override func viewDidLoad() {
@@ -96,6 +103,22 @@ extension AlbumInfoVC : albumInfoDeleteProtocol {
         albumPasswordUploadBtn.layer.borderColor = UIColor.lightGray.cgColor
         albumPasswordCopyBtn.addTarget(self, action: #selector(touchPasswordCopyBtn), for: .touchUpInside)
         albumPasswordUploadBtn.addTarget(self, action: #selector(touchPasswordUploadBtn), for: .touchUpInside)
+    }
+    
+    private func defaultUserSetting(){
+        switch isDefaultUser {
+        case true:
+            inviteBtn.isHidden = true
+            copyPasswdBtn.isHidden = true
+            newPasswdBtn.isHidden = true
+            quitBtn.isHidden = true
+        case false:
+            inviteBtn.isHidden = false
+            copyPasswdBtn.isHidden = false
+            newPasswdBtn.isHidden = false
+            quitBtn.isHidden = false
+        }
+        
     }
     
     private func hideViewSetting(){
