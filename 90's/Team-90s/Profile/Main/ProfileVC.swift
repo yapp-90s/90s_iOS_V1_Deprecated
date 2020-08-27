@@ -58,12 +58,15 @@ class ProfileVC: UIViewController {
     
     @IBAction func goLogin(_ sender: Any) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        UserDefaults.standard.removeObject(forKey: "defaultjwt")
         appDelegate.switchEnterView()
     }
     
     @IBAction func goLogout(_ sender: Any) {
         //저장되어있는 모든 정보를 삭제함
-        removeSavedUserInfo()
+        if let appDomain = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: appDomain)
+        }
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.switchEnterView()
     }
@@ -139,7 +142,7 @@ class ProfileVC: UIViewController {
     
     func setProfileUI(_ profileResult: ProfileResult){
         //디폴트 유저는 전화번호가 nil
-        print("setProfileUI. \(profileResult)")
+        
         if profileResult.userInfo.phoneNum != nil {
             profileEmail.text = profileResult.userInfo.email
             profilePrintCount.text = "\(profileResult.albumPrintingCount)"
@@ -154,16 +157,6 @@ class ProfileVC: UIViewController {
             lineImageView.isHidden = true
         }
     }
-    
-    //로그아웃시 사용되는 메소드 - 모든 정보 지움
-    func removeSavedUserInfo(){
-        UserDefaults.standard.removeObject(forKey: "email")
-        UserDefaults.standard.removeObject(forKey: "password")
-        UserDefaults.standard.removeObject(forKey: "social")
-        UserDefaults.standard.removeObject(forKey: "jwt")
-        UserDefaults.standard.removeObject(forKey: "defaultjwt")
-    }
-    
     
     //프로필 조회 불가 시 경고창
     func showErrAlert(){

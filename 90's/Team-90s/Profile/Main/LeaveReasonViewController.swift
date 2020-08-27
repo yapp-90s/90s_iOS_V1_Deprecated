@@ -50,12 +50,10 @@ class LeaveReasonViewController: UIViewController {
                 switch status {
                 case 200:
                     //기존의 정보 다 삭제(자체로그인 시 저장하는 정보 : email, password, social, jwt)
-                    UserDefaults.standard.removeObject(forKey: "email")
-                    UserDefaults.standard.removeObject(forKey: "password")
-                    UserDefaults.standard.removeObject(forKey: "social")
-                    UserDefaults.standard.removeObject(forKey: "jwt")
-                    UserDefaults.standard.removeObject(forKey: "isAppleId")
-                    UserDefaults.standard.removeObject(forKey: "defaultjwt")
+                    if let appDomain = Bundle.main.bundleIdentifier {
+                        UserDefaults.standard.removePersistentDomain(forName: appDomain)
+                    }
+
                     let appDelegate = UIApplication.shared.delegate as! AppDelegate
                     appDelegate.switchEnterView()
                     break
@@ -70,9 +68,9 @@ class LeaveReasonViewController: UIViewController {
     
     func showErrAlert(){
         let alert = UIAlertController(title: "오류", message: "회원탈퇴 불가", preferredStyle: .alert)
-              let action = UIAlertAction(title: "확인", style: .default)
-              alert.addAction(action)
-              self.present(alert, animated: true)
+        let action = UIAlertAction(title: "확인", style: .default)
+        alert.addAction(action)
+        self.present(alert, animated: true)
     }
     
 }
@@ -114,6 +112,4 @@ extension LeaveReasonViewController: clickReasonDelegate {
         }
         reasonTableView.reloadData()
     }
-    
-    
 }

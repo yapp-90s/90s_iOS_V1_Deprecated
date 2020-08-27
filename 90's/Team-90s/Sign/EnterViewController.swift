@@ -12,6 +12,7 @@ import KakaoOpenSDK
 
 var isDefaultUser : Bool = false
 
+
 class EnterViewController: UIViewController {
     
     @IBOutlet weak var loginBtn: UIButton!
@@ -28,8 +29,7 @@ class EnterViewController: UIViewController {
     var isInitialAppleLogin = true
     
     override func viewWillAppear(_ animated: Bool) {
-        
-        if(initialEnter){
+        if initialEnter {
             autoLogin()
         }
     }
@@ -210,11 +210,14 @@ class EnterViewController: UIViewController {
                 switch status {
                 case 200:
                     isDefaultUser = true
+                    
                     guard let data = response.data else { return }
                     let decoder = JSONDecoder()
                     guard let defaultResult = try? decoder.decode(SignUpResult.self, from: data) else { return }
                     guard let jwt = defaultResult.jwt else { return }
+
                     UserDefaults.standard.set(jwt, forKey: "defaultjwt")
+                    UserDefaults.standard.set(nil, forKey: "jwt")
                     
                     let appDelegate = UIApplication.shared.delegate as! AppDelegate
                     appDelegate.switchTab()
@@ -240,8 +243,7 @@ class EnterViewController: UIViewController {
                 switch status {
                 case 200:
                     guard let data = response.data else { return }
-                    let decoder = JSONDecoder()
-                    guard let loginResult = try? decoder.decode(SignUpResult.self, from: data) else { return }
+                    guard let loginResult = try? JSONDecoder().decode(SignUpResult.self, from: data) else { return }
                     guard let jwt = loginResult.jwt else { return }
                     
                     //로그인 될때마다 jwt 갱신해서 저장
@@ -251,6 +253,7 @@ class EnterViewController: UIViewController {
                     UserDefaults.standard.set(social, forKey: "social")
                     UserDefaults.standard.set(self.isAppleId, forKey: "isAppleId")
                     
+                    UserDefaults.standard.set("", forKey: "defaultjwt")
                     isDefaultUser = false
                     //이미 가입된 애플아이디 && revoked상태 이면 탈퇴시키고 전화번호 입력화면으로 이동
                     if(self.isRevokedAppleId){
@@ -313,11 +316,9 @@ class EnterViewController: UIViewController {
             switch status {
             case 200:
                 //기존의 정보 다 삭제(자체로그인 시 저장하는 정보 : email, password, social, jwt)
-                UserDefaults.standard.removeObject(forKey: "email")
-                UserDefaults.standard.removeObject(forKey: "password")
-                UserDefaults.standard.removeObject(forKey: "social")
-                UserDefaults.standard.removeObject(forKey: "jwt")
-                UserDefaults.standard.removeObject(forKey: "defaultjwt")
+                if let appDomain = Bundle.main.bundleIdentifier {
+                    UserDefaults.standard.removePersistentDomain(forName: appDomain)
+                }
                 
                 //전화번호 인증화면으로 이동
                 self.goAuthenView()
