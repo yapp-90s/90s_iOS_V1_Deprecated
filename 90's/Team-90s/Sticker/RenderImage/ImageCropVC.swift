@@ -98,7 +98,9 @@ extension ImageCropVC {
     }
     
     private func nextVC(){
-        let croppedImage : UIImage = photoImageView.image!.cropToRect(rect: layoutImageView.frame)!
+        let scale: CGFloat = photoImageView.image!.size.width / photoImageView.frame.width
+        let rect = CGRect(x: layoutImageView.frame.minX * scale, y: layoutImageView.frame.minY * scale, width: layoutImageView.frame.width * scale, height: layoutImageView.frame.height * scale)
+        let croppedImage : UIImage = photoImageView.image!.cropToRect(rect: rect)!
         image = croppedImage
         
         if image != nil {
