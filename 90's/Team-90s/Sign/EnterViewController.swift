@@ -204,7 +204,7 @@ class EnterViewController: UIViewController {
     
     //둘러보기 클릭 -> 디폴트 유저 토큰 저장
     func getDefaultUser(){
-        DefaultUserService.shared.getDefaultUser(completion: {
+        SignService.shared.getDefaultUser(completion: {
             response in
             if let status = response.response?.statusCode {
                 switch status {
@@ -238,7 +238,7 @@ class EnterViewController: UIViewController {
     
     //자동로그인 -> 로그인 서버통신
     func goLogin(_ email: String, _ password: String?, _ social: Bool){
-        LoginService.shared.login(email: email, password: password, sosial: social, completion: { response in
+        SignService.shared.login(email: email, password: password, sosial: social, completion: { response in
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:
@@ -279,7 +279,7 @@ class EnterViewController: UIViewController {
     }
     
     func checkEmail(){
-        EmailCheckService.shared.emailCheck(email: socialEmail, completion: {
+        SignService.shared.emailCheck(email: socialEmail, completion: {
             response in
             if let status = response.response?.statusCode {
                 switch status {

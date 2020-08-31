@@ -533,6 +533,7 @@ extension AlbumDetailVC : UIImagePickerControllerDelegate, UINavigationControlle
 }
 
 
+
 extension AlbumDetailVC {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "GoToInfoVC" {
@@ -542,4 +543,18 @@ extension AlbumDetailVC {
         }
     }
 }
+
+
+
+class PhotoCell : UICollectionViewCell {
+    @IBOutlet weak var backImageView: UIImageView!
+    @IBOutlet weak var photoImageView: UIImageView!
+}
+
+
+class DetailAbumCell: UICollectionViewCell {
+    @IBOutlet weak var albumTitle: UILabel!
+    @IBOutlet weak var albumCount: UILabel!
+}
+
 

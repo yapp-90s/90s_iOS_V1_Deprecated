@@ -109,7 +109,7 @@ class NewEmailViewController: UIViewController, UITextFieldDelegate {
 extension NewEmailViewController {
     
     func checkEmail(){
-        EmailCheckService.shared.emailCheck(email: self.email, completion: {
+        SignService.shared.emailCheck(email: self.email, completion: {
             response in
             if let status = response.response?.statusCode {
                 switch status {

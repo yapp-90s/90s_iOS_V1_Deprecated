@@ -205,7 +205,7 @@
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="clickMakeBtn:" destination="XpK-CZ-a6E" eventType="touchUpInside" id="Jna-5h-r00"/>
+                                            <action selector="touchCreateBtn:" destination="XpK-CZ-a6E" eventType="touchUpInside" id="NBq-0I-ikM"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="앨범을 만들어 소중한 추억을 만들어보세요" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mLE-Gr-vMT">

@@ -61,6 +61,7 @@ class AlbumInfoVC: UIViewController {
     var userUidArray : [Int] = []
     var userNameArray : [String] = []
     
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first!
         
@@ -350,5 +351,23 @@ extension AlbumInfoVC : UITableViewDelegate, UITableViewDataSource {
         self.memberTableView.layoutIfNeeded()
         
         return cell
+    }
+}
+
+
+
+class MemberTableViewCell: UITableViewCell {
+    @IBOutlet weak var memberImageView: UIImageView!
+    @IBOutlet weak var memberNameLabel: UILabel!
+    @IBOutlet weak var memberSubLabel: UILabel!
+    @IBOutlet weak var memberDeleteBtn: UIButton!
+    @IBAction func memberDeleteBtn(_ sender: UIButton) {
+        infoProtocol?.switchQuitHideView(value: false)
+    }
+    
+    var infoProtocol : albumInfoDeleteProtocol?
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
     }
 }
