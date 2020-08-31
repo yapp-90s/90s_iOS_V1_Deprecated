@@ -46,7 +46,7 @@ class OrderListViewController: UIViewController {
     }
     
     func getOrder(){
-        GetOrderService.shared.getOrder(completion: { response in
+        ProfileService.shared.getOrder(completion: { response in
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:
@@ -139,3 +139,10 @@ extension OrderListViewController : UITableViewDelegate, UITableViewDataSource {
 }
 
 
+class OrderCell: UITableViewCell {
+    @IBOutlet weak var albumImageView: UIImageView!
+    @IBOutlet weak var statusImageView: UIImageView!
+    @IBOutlet weak var albumNameLabel: UILabel!
+    @IBOutlet weak var albumPriceLabel: UILabel!
+    @IBOutlet weak var orderNumberLabel: UILabel!
+}

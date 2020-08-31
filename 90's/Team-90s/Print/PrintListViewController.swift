@@ -213,7 +213,7 @@ extension PrintListViewController : ClickActionDelegate {
     }
     
     func getOrder(albumUid: Int){
-        GetOrderService.shared.getOrder(completion: { response in
+        ProfileService.shared.getOrder(completion: { response in
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:

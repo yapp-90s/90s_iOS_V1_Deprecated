@@ -139,7 +139,7 @@ extension NewEmailViewController {
         
         //이메일 변경 서버통신 메소드
         func changeEmail(){
-            ChangeEmailService.shared.changeEmail(email: self.email, completion: { response in
+            ProfileService.shared.changeEmail(email: self.email, completion: { response in
                 if let status = response.response?.statusCode {
                     switch status {
                     case 200:

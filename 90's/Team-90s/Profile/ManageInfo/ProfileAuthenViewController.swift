@@ -218,7 +218,7 @@ extension ProfileAuthenViewController {
     
     //전화번호 변경 서버통신 메소드
     func changePhone(){
-        ChangePhoneService.shared.changePhone(phoneNum: self.telephone, completion: { response in
+        ProfileService.shared.changePhone(phoneNum: self.telephone, completion: { response in
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:

@@ -163,7 +163,7 @@ class NewPassViewController: UIViewController, UITextFieldDelegate {
 extension NewPassViewController {
     //비밀번호 변경 서버통신 메소드
     func changePassword(){
-        ChangePassService.shared.changePass(password: self.pass, phoneNum: self.phoneNum, completion: { response in
+        ProfileService.shared.changePass(password: self.pass, phoneNum: self.phoneNum, completion: { response in
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:

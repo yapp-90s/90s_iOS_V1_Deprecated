@@ -119,7 +119,7 @@ class ProfileVC: UIViewController {
     func getProfile(){
         guard let jwt = UserDefaults.standard.string(forKey: "jwt") else { return }
         
-        GetProfileService.shared.getProfile(token: jwt, completion: {
+        ProfileService.shared.getProfile(token: jwt, completion: {
             response in
             if let status = response.response?.statusCode {
                 switch status {
@@ -231,4 +231,6 @@ extension ProfileVC : UITableViewDelegate, UITableViewDataSource {
 }
 
 
-
+class ProfileTableViewCell: UITableViewCell {
+    @IBOutlet weak var settingLabel: UILabel!
+}

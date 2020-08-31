@@ -311,7 +311,7 @@ class EnterViewController: UIViewController {
     
     func leave(){
         guard let token = UserDefaults.standard.string(forKey: "jwt") else { return }
-        LeaveService.shared.leave(token: token, completion: {
+        ProfileService.shared.leave(token: token, completion: {
             status in
             switch status {
             case 200:
