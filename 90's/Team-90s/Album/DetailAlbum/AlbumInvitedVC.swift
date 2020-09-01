@@ -128,7 +128,7 @@ extension AlbumInvitedVC {
 extension AlbumInvitedVC {
     //자동로그인 -> 로그인 서버통신
     func goLogin(_ email: String, _ password: String?, _ social: Bool){
-        LoginService.shared.login(email: email, password: password, sosial: social, completion: { response in
+        SignService.shared.login(email: email, password: password, sosial: social, completion: { response in
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:

@@ -192,7 +192,7 @@ extension ProfileAuthenViewController {
     //서버에서 문자를 보내고, 보낸 인증번호 받는 메소드
     func getAuthenNumber(){
         telephone = tfTelephone.text!.replacingOccurrences(of: "-", with: "")
-        TelephoneAuthService.shared.telephoneAuth(phone: telephone, completion: { response in
+        SignService.shared.telephoneAuth(phone: telephone, completion: { response in
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:
@@ -218,7 +218,7 @@ extension ProfileAuthenViewController {
     
     //전화번호 변경 서버통신 메소드
     func changePhone(){
-        ChangePhoneService.shared.changePhone(phoneNum: self.telephone, completion: { response in
+        ProfileService.shared.changePhone(phoneNum: self.telephone, completion: { response in
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:

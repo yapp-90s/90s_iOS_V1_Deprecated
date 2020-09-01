@@ -69,3 +69,7 @@ extension ManageInfoViewController : UITableViewDelegate, UITableViewDataSource 
     }
     
 }
+
+class InfoCell: UITableViewCell {
+    @IBOutlet weak var infoNameLabel: UILabel!
+}

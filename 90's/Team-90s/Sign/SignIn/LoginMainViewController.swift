@@ -78,7 +78,7 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
     
     //로그인 서버통신 메소드(자체회원가입 -> 자체로그인)
     func goLogin(_ email: String, _ password: String?, _ social: Bool){
-        LoginService.shared.login(email: email, password: password, sosial: social, completion: { response in
+        SignService.shared.login(email: email, password: password, sosial: social, completion: { response in
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:

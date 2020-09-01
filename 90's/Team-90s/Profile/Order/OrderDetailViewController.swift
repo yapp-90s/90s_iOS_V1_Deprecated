@@ -162,10 +162,8 @@ class OrderDetailViewController: UIViewController {
     
     
     func cancelOrder(){
-        print("\(albumOrderUid)")
-        CancelOrderService.shared.cancelOrder(albumOrderUid: self.albumOrderUid, completion: {
+        ProfileService.shared.cancelOrder(albumOrderUid: self.albumOrderUid, completion: {
             status in
-            print("\(status)")
             switch(status){
             case 200:
                 self.showSuccessAlert()

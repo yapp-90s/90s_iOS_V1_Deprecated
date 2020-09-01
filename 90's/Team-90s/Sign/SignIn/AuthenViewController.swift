@@ -132,7 +132,7 @@ class AuthenViewController: UIViewController {
     func getAuthenNumber(){
         telephone = tfTelephone.text!.replacingOccurrences(of: "-", with: "")
         //서버에서 문자를 보내고, 보낸 인증번호 받는 메소드
-        TelephoneAuthService.shared.telephoneAuth(phone: telephone, completion: { response in
+        SignService.shared.telephoneAuth(phone: telephone, completion: { response in
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:
@@ -178,7 +178,7 @@ class AuthenViewController: UIViewController {
     }
     
     func findEmail(){
-        FindEmailService.shared.findEmail(phoneNum: self.telephone, completion: {
+        SignService.shared.findEmail(phoneNum: self.telephone, completion: {
             response in
             if let status = response.response?.statusCode {
                 switch status {

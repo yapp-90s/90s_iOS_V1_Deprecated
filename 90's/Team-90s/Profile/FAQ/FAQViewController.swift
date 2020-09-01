@@ -102,6 +102,4 @@ extension FAQViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
     }
-    
-    
 }
