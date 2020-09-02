@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class EmailViewController: UIViewController, UITextFieldDelegate{
+class EmailViewController: UIViewController {
     @IBOutlet weak var tfEmail: UITextField!
     @IBOutlet weak var selectorImageView: UIImageView!
     @IBOutlet weak var emailValidationLabel: UILabel!
@@ -23,11 +23,6 @@ class EmailViewController: UIViewController, UITextFieldDelegate{
         super.viewDidLoad()
         setUI()
         setObserver()
-    }
-    
-    //화면 터치시 키보드 내림
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        tfEmail.endEditing(true)
     }
     
     @IBAction func goBack(_ sender: Any) {
@@ -92,18 +87,24 @@ extension EmailViewController {
         buttonConst.constant = 18
     }
     
-    //키보드 리턴 버튼 클릭 시 키보드 내림
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        tfEmail.resignFirstResponder()
-        return true
-    }
-    
     func goPassVC() {
         let passwordVC = storyboard?.instantiateViewController(withIdentifier: "PasswordViewController") as! PasswordViewController
         passwordVC.email = self.email
         navigationController?.pushViewController(passwordVC, animated: true)
     }
     
+}
+
+
+extension EmailViewController : UITextFieldDelegate {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        tfEmail.endEditing(true)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        tfEmail.resignFirstResponder()
+        return true
+    }
 }
 
 

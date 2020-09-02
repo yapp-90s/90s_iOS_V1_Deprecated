@@ -69,7 +69,6 @@ class AuthenViewController: UIViewController {
 
 
 extension AuthenViewController {
-    //UI
     func setUI(){
         validationLabel.isHidden = true
         
@@ -134,7 +133,6 @@ extension AuthenViewController {
             
         })
         
-        //키보드에 대한 Observer
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }

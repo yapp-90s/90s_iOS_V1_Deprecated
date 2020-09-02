@@ -17,6 +17,7 @@ class AlbumPeriodVC : UIViewController {
     @IBOutlet weak var buttonConstraint: NSLayoutConstraint!
     @IBOutlet weak var selectorLabel1: UILabel!
     @IBOutlet weak var selectorLabel2: UILabel!
+    
     @IBAction func cancleBtn(_ sender: UIButton) {
         self.navigationController?.popToRootViewController(animated: true)
     }
@@ -32,11 +33,10 @@ class AlbumPeriodVC : UIViewController {
             nextVC.albumEndDate = tfExpireDate.text!
            
             self.navigationController?.pushViewController(nextVC, animated: true)
-            
         }
     }
     
-    var albumName:String!
+    var albumName : String = ""
     let datePicker = UIDatePicker()
     let formatter = DateFormatter()
     
@@ -91,7 +91,6 @@ extension AlbumPeriodVC {
 extension AlbumPeriodVC {
     @objc func changePickerValue(){
            tfExpireDate.text = formatter.string(from: datePicker.date)
-           
            self.selectorLabel1.backgroundColor = UIColor.black
            self.selectorLabel2.backgroundColor = UIColor.black
            self.nextBtn.switchComplete(next: true)

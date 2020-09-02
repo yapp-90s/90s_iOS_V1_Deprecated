@@ -46,7 +46,6 @@ class AlbumCompleteVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
     }
     
     override func viewDidLoad() {
@@ -60,13 +59,9 @@ extension AlbumCompleteVC {
     func playAnimation(){
         lottieView.isHidden = false
         let animationView = AnimationView(name:"complete_album")
-        animationView.translatesAutoresizingMaskIntoConstraints = false
         lottieView.addSubview(animationView)
-        
-        animationView.topAnchor.constraint(equalTo: lottieView.topAnchor, constant: 150.0).isActive = true
+        setSubViewFrameSetting(view: lottieView, subView: animationView, top: 150, left: 0, right: 0, bottom: 0)
         animationView.heightAnchor.constraint(equalToConstant: 434.0).isActive = true
-        animationView.leadingAnchor.constraint(equalTo: lottieView.leadingAnchor).isActive = true
-        animationView.trailingAnchor.constraint(equalTo: lottieView.trailingAnchor).isActive = true
         animationView.layoutIfNeeded()
         
         //애니메이션 재생(애니메이션 재생모드 미 설정시 1회)
@@ -99,7 +94,7 @@ extension AlbumCompleteVC {
                 switch status {
                 case 200 :
                     guard let data = response.data else {return}
-                    guard let uid = try? JSONDecoder().decode(AlbumCreateResult.self, from: data) else {return}
+                    guard let uid = try? JSONDecoder().decode(AlbumCreateResult.self, from: data) else { return }
                     self.albumUid = uid.uid
                     self.albumCompleteBtn.isHidden = true
                     self.playAnimation()

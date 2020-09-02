@@ -9,7 +9,7 @@
 import UIKit
 
 
-class LoginMainViewController: UIViewController, UITextFieldDelegate {
+class LoginMainViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tfEmail: UITextField!
     @IBOutlet weak var emailValidationLabel: UILabel!
@@ -29,12 +29,6 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         setUI()
         setTextFieldObserver()
-    }
-    
-    //화면 터치시 키보드 내림
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        tfEmail.endEditing(true)
-        tfPass.endEditing(true)
     }
     
     @IBAction func goBack(_ sender: Any) {
@@ -125,16 +119,6 @@ extension LoginMainViewController {
         self.present(alert, animated: true)
     }
     
-    
-    //키보드 리턴 버튼 클릭 시 키보드 내림
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        if textField == tfEmail {
-            tfPass.becomeFirstResponder()
-        }
-        return true
-    }
-    
     func setUI(){
         tfPass.delegate = self
         tfEmail.delegate = self
@@ -221,5 +205,21 @@ extension LoginMainViewController {
             self.view.frame.origin.y = 0
             self.view.layoutIfNeeded()
         }
+    }
+}
+
+
+extension LoginMainViewController : UITextFieldDelegate {
+     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+         tfEmail.endEditing(true)
+         tfPass.endEditing(true)
+     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        if textField == tfEmail {
+            tfPass.becomeFirstResponder()
+        }
+        return true
     }
 }
