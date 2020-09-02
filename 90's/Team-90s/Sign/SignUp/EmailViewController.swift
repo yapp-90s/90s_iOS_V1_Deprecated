@@ -17,12 +17,17 @@ class EmailViewController: UIViewController, UITextFieldDelegate{
     @IBOutlet weak var buttonConst: NSLayoutConstraint!
     @IBOutlet weak var titleLabel: UILabel!
     
-    var email:String!
+    var email : String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
         setObserver()
+    }
+    
+    //화면 터치시 키보드 내림
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        tfEmail.endEditing(true)
     }
     
     @IBAction func goBack(_ sender: Any) {
@@ -33,16 +38,19 @@ class EmailViewController: UIViewController, UITextFieldDelegate{
         self.email = tfEmail.text!
         
         //string extension을 통해 정규식 검증
-        if(email.validateEmail()){
+        if email.validateEmail() {
             emailValidationLabel.isHidden = true
             checkEmail()
-        }else {
+        } else {
             emailValidationLabel.isHidden = false
             emailValidationLabel.text = "이메일 확인 후 재시도 해주세요"
             selectorImageView.image = UIImage(named: "path378Red")
         }
     }
-    
+}
+
+
+extension EmailViewController {
     func setUI(){
         tfEmail.delegate = self
         emailValidationLabel.isHidden = true
@@ -56,11 +64,11 @@ class EmailViewController: UIViewController, UITextFieldDelegate{
             _ in
             let str = self.tfEmail.text!.trimmingCharacters(in: .whitespaces)
             
-            if(str != ""){
+            if !str.isEmpty {
                 self.selectorImageView.image = UIImage(named: "path378Black")
                 self.nextBtn.backgroundColor = UIColor(red: 227/255, green: 62/255, blue: 40/255, alpha: 1.0)
                 self.nextBtn.isEnabled = true
-            }else {
+            } else {
                 self.selectorImageView.image = UIImage(named: "path378Grey1")
                 self.nextBtn.backgroundColor = UIColor(red: 199/255,green: 201/255, blue: 208/255, alpha: 1.0)
                 self.nextBtn.isEnabled = false
@@ -77,21 +85,11 @@ class EmailViewController: UIViewController, UITextFieldDelegate{
         let userInfo = notification.userInfo
         let keyboardSize = userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue
         let keyboardHeight = keyboardSize.cgRectValue.height
-        
-        if(keyboardHeight > 300){
-            buttonConst.constant = keyboardHeight - 18
-        }else{
-            buttonConst.constant = keyboardHeight + 18
-        }
+        buttonConst.constant = keyboardHeight > 300 ? keyboardHeight - 18 : keyboardHeight + 18
     }
     
     @objc func keyboardWillHide(_ notification: Notification) {
         buttonConst.constant = 18
-    }
-    
-    //화면 터치시 키보드 내림
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        tfEmail.endEditing(true)
     }
     
     //키보드 리턴 버튼 클릭 시 키보드 내림
@@ -110,7 +108,6 @@ class EmailViewController: UIViewController, UITextFieldDelegate{
 
 
 extension EmailViewController {
-    
     func checkEmail(){
         SignService.shared.emailCheck(email: self.email, completion: {
             response in
@@ -118,10 +115,9 @@ extension EmailViewController {
                 switch status {
                 case 200:
                     guard let data = response.data else { return }
-                    let decoder = JSONDecoder()
-                    let checkEmailResult = try? decoder.decode(CheckEmailResult.self, from: data)
-                    guard let isExist = checkEmailResult?.result else { return }
-                    if(isExist){
+                    guard let checkEmailResult = try? JSONDecoder().decode(CheckEmailResult.self, from: data) else { return }
+                    guard let isExist = checkEmailResult.result else { return }
+                    if isExist {
                         self.emailValidationLabel.isHidden = false
                         self.emailValidationLabel.text = "이미 존재하는 계정입니다"
                     }else {
@@ -139,10 +135,7 @@ extension EmailViewController {
                 }
             }
         })
-        
     }
-    
-    
 }
 
 

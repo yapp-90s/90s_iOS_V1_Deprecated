@@ -11,6 +11,7 @@ import UIKit
 class CompleteViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var loginBtn: UIButton!
+    
     var isSocial:Bool!
     
     override func viewDidLoad() {
@@ -25,15 +26,12 @@ class CompleteViewController: UIViewController {
     
     @IBAction func goLoginVC(_ sender: Any) {
         //카카오 회원가입일 시 바로 탭 화면으로 이동함
-        if(isSocial) {
+        if isSocial {
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             appDelegate.switchTab()
-        }else {
+        } else {
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             appDelegate.switchSignIn()
         }
-        
-}
-    
-    
+    }
 }

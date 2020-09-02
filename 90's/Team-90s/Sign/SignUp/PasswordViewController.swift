@@ -21,12 +21,17 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var titleLabel: UILabel!
     
     var keyboardFlag = false
-    var email:String!
+    var email : String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
         setObserver()
+    }
+    //화면 터치시 키보드 내림
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        tfNewPass.endEditing(true)
+        tfConfirmPass.endEditing(true)
     }
     
     @IBAction func goBack(_ sender: Any) {
@@ -37,17 +42,19 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
     @IBAction func clickNextBtn(_ sender: Any) {
         let newPass = tfNewPass.text!
         let confirmPass = tfConfirmPass.text!
-        if(newPass == confirmPass){
+        if newPass == confirmPass {
             let nickNameVC = storyboard?.instantiateViewController(withIdentifier: "NicknameViewController") as! NicknameViewController
             nickNameVC.email = email
             nickNameVC.pwd = newPass
             navigationController?.pushViewController(nickNameVC, animated: true)
-        }else {
+        } else {
             validationLabel.isHidden = false
             selectorImageView2.image = UIImage(named: "path378Red")
         }
     }
-    
+}
+
+extension PasswordViewController {
     func setUI(){
         tfNewPass.delegate = self
         tfConfirmPass.delegate = self
@@ -55,7 +62,7 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         tfConfirmPass.isEnabled = false
         validationLabel.isHidden = true
         nextBtn.layer.cornerRadius = 8.0
-         titleLabel.textLineSpacing(firstText: "비밀번호를", secondText: "입력해주세요")
+        titleLabel.textLineSpacing(firstText: "비밀번호를", secondText: "입력해주세요")
     }
     
     func setObserver(){
@@ -64,10 +71,10 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
             _ in
             let str = self.tfNewPass.text!.trimmingCharacters(in: .whitespaces)
             
-            if(str != ""){
+            if !str.isEmpty {
                 self.selectorImageView1.image = UIImage(named: "path378Black")
                 self.tfConfirmPass.isEnabled = true
-            }else {
+            } else {
                 self.selectorImageView1.image = UIImage(named: "path378Grey1")
                 self.tfConfirmPass.isEnabled = false
             }
@@ -79,11 +86,11 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
             _ in
             let str = self.tfConfirmPass.text!.trimmingCharacters(in: .whitespaces)
             
-            if(str != ""){
+            if !str.isEmpty {
                 self.selectorImageView2.image = UIImage(named: "path378Black")
                 self.nextBtn.backgroundColor = UIColor(red: 227/255, green: 62/255, blue: 40/255, alpha: 1.0)
                 self.nextBtn.isEnabled = true
-            }else {
+            } else {
                 self.selectorImageView2.image = UIImage(named: "path378Grey1")
                 self.nextBtn.backgroundColor = UIColor(red: 199/255,green: 201/255, blue: 208/255, alpha: 1.0)
                 self.nextBtn.isEnabled = false
@@ -96,17 +103,26 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    //키보드 리턴 버튼 클릭 시 키보드 내림
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        if textField == tfNewPass {
+            tfConfirmPass.becomeFirstResponder()
+        }
+        return true
+    }
+    
     @objc func keyboardWillShow(_ notification: Notification) {
         let userInfo = notification.userInfo
         let keyboardSize = userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue
         let keyboardHeight = keyboardSize.cgRectValue.height
         
         let frameHeight = self.view.frame.height
-        print("\(frameHeight)")
-        if(frameHeight >= 736.0){
+       
+        if frameHeight >= 736.0 {
             //iphone6+, iphoneX ... (화면이 큰 휴대폰)
             buttonConst.constant = keyboardHeight - 18
-        }else if(!keyboardFlag){
+        } else if !keyboardFlag {
             //~iphone8, iphone7 (화면이 작은 휴대폰)
             keyboardFlag = true
             topConst.constant += 70
@@ -118,13 +134,12 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
     @objc func keyboardWillHide(_ notification: Notification) {
         let userInfo = notification.userInfo
         let keyboardSize = userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue
-        let keyboardHeight = keyboardSize.cgRectValue.height
         let frameHeight = self.view.frame.height
 
-        if(frameHeight >= 736.0){
+        if frameHeight >= 736.0 {
             //iphoneX~
             buttonConst.constant = 18
-        }else if(keyboardFlag){
+        }else if keyboardFlag {
             //~iphone8
             keyboardFlag = false
             topConst.constant -= 70
@@ -132,21 +147,4 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
             self.view.layoutIfNeeded()
         }
     }
-    
-    //화면 터치시 키보드 내림
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        tfNewPass.endEditing(true)
-        tfConfirmPass.endEditing(true)
-    }
-    
-    //키보드 리턴 버튼 클릭 시 키보드 내림
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        if(textField == tfNewPass){
-            tfConfirmPass.becomeFirstResponder()
-        }
-        return true
-    }
-    
-    
 }

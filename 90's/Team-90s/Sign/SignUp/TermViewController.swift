@@ -15,7 +15,6 @@ protocol ClickDelegate : NSObjectProtocol {
 
 
 class TermViewController: UIViewController {
-    
     @IBOutlet weak var termTableView: UITableView!
     @IBOutlet weak var agreeAllTermBtn: UIButton!
     @IBOutlet weak var okBtn: UIButton!
@@ -33,9 +32,9 @@ class TermViewController: UIViewController {
     @IBAction func goBack(_ sender: Any) {
         guard let count = navigationController?.viewControllers.count else { return }
         
-        if (count >= 2){
+        if count >= 2{
             navigationController?.popViewController(animated: true)
-        }else {
+        } else {
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             appDelegate.switchEnterView()
         }
@@ -46,20 +45,16 @@ class TermViewController: UIViewController {
         
         for cell in cellArr {
             let cell = cell as! TermCell
-            if(!isAllTermBtnClicked){
-                cell.isClicked = true
-            } else {
-                cell.isClicked = false
-            }
+            cell.isClicked = isAllTermBtnClicked ? true : false
         }
         
         isAllTermBtnClicked = !isAllTermBtnClicked
         
-        if(isAllTermBtnClicked){
+        if isAllTermBtnClicked {
             agreeAllTermBtn.setBackgroundImage(UIImage(named: "checkboxInact"), for: .normal)
             okBtn.backgroundColor = UIColor(red: 227/255, green: 62/255, blue: 40/255, alpha: 1.0)
             okBtn.isEnabled = true
-        }else {
+        } else {
             agreeAllTermBtn.setBackgroundImage(UIImage(named: "checkboxgray"), for: .normal)
             okBtn.backgroundColor = UIColor(red: 199/255, green: 201/255, blue: 208/255, alpha: 1.0)
             okBtn.isEnabled = false
@@ -82,15 +77,10 @@ class TermViewController: UIViewController {
         okBtn.layer.cornerRadius = 8.0
         titleLabel.textLineSpacing(firstText: "원활한 사용을 위해", secondText: "이용 약관에 동의해 주세요")
     }
-    
 }
 
 
-extension TermViewController : UITableViewDelegate {
-    
-}
-
-extension TermViewController : UITableViewDataSource {
+extension TermViewController : UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 3
     }
@@ -114,25 +104,19 @@ extension TermViewController : ClickDelegate {
     }
     
     func cellClick(isClicked: Bool) {
-        if(isClicked) {
-            agreeCount += 1
-        }else {
-            agreeCount -= 1
-        }
+        agreeCount = isClicked ? agreeCount + 1 : agreeCount - 1
         termTableView.reloadData()
         
-        if(agreeCount == 3){
+        if agreeCount == 3 {
             agreeAllTermBtn.setBackgroundImage(UIImage(named: "checkboxInact"), for: .normal)
             okBtn.backgroundColor = UIColor(red: 227/255, green: 62/255, blue: 40/255, alpha: 1.0)
             okBtn.isEnabled = true
-        }else {
+        } else {
             agreeAllTermBtn.setBackgroundImage(UIImage(named: "checkboxgray"), for: .normal)
             okBtn.backgroundColor = UIColor(red: 199/255, green: 201/255, blue: 208/255, alpha: 1.0)
             okBtn.isEnabled = false
         }
     }
-    
-    
 }
 
 

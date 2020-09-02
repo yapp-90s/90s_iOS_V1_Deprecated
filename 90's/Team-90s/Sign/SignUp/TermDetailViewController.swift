@@ -9,11 +9,14 @@
 import UIKit
 
 class TermDetailViewController: UIViewController {
-    var index: Int!
-    
     @IBOutlet weak var termImageView: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var viewHeightConst: NSLayoutConstraint!
+    @IBAction func goBack(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    var index: Int!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,20 +41,4 @@ class TermDetailViewController: UIViewController {
             break
         }
     }
-    
-    
-    @IBAction func goBack(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
-    }
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }
