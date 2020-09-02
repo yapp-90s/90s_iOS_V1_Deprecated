@@ -33,11 +33,6 @@ class AuthenViewController: UIViewController {
     var authenNumber:String?
     var keyboardFlag = false
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setUI()
-        setObserver()
-    }
     
     @IBAction func goBack(_ sender: Any) {
         navigationController?.popViewController(animated: true)
@@ -46,7 +41,7 @@ class AuthenViewController: UIViewController {
     
     //전송 버튼 클릭 시
     @IBAction func askNumber(_ sender: Any) {
-        if(!authenFlag){
+        if !authenFlag {
             askNumberBtn.setTitle("재전송", for: .normal)
             authenFlag = true
         }
@@ -59,6 +54,21 @@ class AuthenViewController: UIViewController {
         goAuthen(authenType: authenType)
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setUI()
+        setObserver()
+    }
+    
+    //화면 터치시 키보드 내림
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        tfTelephone.endEditing(true)
+        tfAuthenNumber.endEditing(true)
+    }
+}
+
+
+extension AuthenViewController {
     //UI
     func setUI(){
         validationLabel.isHidden = true
@@ -87,18 +97,18 @@ class AuthenViewController: UIViewController {
             _ in
             let str = self.tfTelephone.text!.trimmingCharacters(in: .whitespaces)
             
-            if(str != ""){
-                if(str.count == 3 && !self.isInitial1 ){
+            if !str.isEmpty {
+                if str.count == 3 && !self.isInitial1 {
                     self.tfTelephone.text = self.tfTelephone.text! + "-"
                     self.isInitial1 = true
-                }else if(str.count == 8 && !self.isInitial2){
+                } else if(str.count == 8 && !self.isInitial2){
                     self.tfTelephone.text = self.tfTelephone.text! + "-"
                     self.isInitial2 = true
                 }
                 self.selectorImageView1.image = UIImage(named: "path378Black")
                 self.askNumberBtn.backgroundColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1.0)
                 self.askNumberBtn.isEnabled = true
-            }else {
+            } else {
                 self.isInitial1 = false
                 self.isInitial2 = false
                 self.selectorImageView1.image = UIImage(named: "path378Grey1")
@@ -112,7 +122,7 @@ class AuthenViewController: UIViewController {
             _ in
             let str = self.tfAuthenNumber.text!.trimmingCharacters(in: .whitespaces)
             
-            if(str != ""){
+            if !str.isEmpty {
                 self.selectorImageView2.image = UIImage(named: "path378Black")
                 self.okBtn.backgroundColor = UIColor(red: 227/255, green: 62/255, blue: 40/255, alpha: 1.0)
                 self.okBtn.isEnabled = true
@@ -159,7 +169,7 @@ class AuthenViewController: UIViewController {
     func goAuthen(authenType : String){
         guard let inputAuthenNumber = tfAuthenNumber.text else { return }
         guard let number = authenNumber else { return }
-        if(inputAuthenNumber == number){
+        if inputAuthenNumber == number {
             switch authenType {
             case "findEmail":
                 self.findEmail()
@@ -172,7 +182,7 @@ class AuthenViewController: UIViewController {
             default:
                 return
             }
-        }else{
+        } else {
             validationLabel.isHidden = false
         }
     }
@@ -207,11 +217,8 @@ class AuthenViewController: UIViewController {
                     return
                 }
             }
-            
         })
-        
     }
-    
     
     func showErrAlert(){
         let alert = UIAlertController(title: "오류", message: "인증번호 전송 불가", preferredStyle: .alert)
@@ -227,7 +234,11 @@ class AuthenViewController: UIViewController {
         self.present(alert, animated: true)
     }
     
-    
+    //키보드 리턴 버튼 클릭 시 키보드 내림
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        tfTelephone.resignFirstResponder()
+        return true
+    }
     
     @objc func keyboardWillShow(_ notification: Notification) {
         let userInfo = notification.userInfo
@@ -265,19 +276,4 @@ class AuthenViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
-    
-    
-    
-    //화면 터치시 키보드 내림
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        tfTelephone.endEditing(true)
-        tfAuthenNumber.endEditing(true)
-    }
-    
-    //키보드 리턴 버튼 클릭 시 키보드 내림
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        tfTelephone.resignFirstResponder()
-        return true
-    }
-    
 }

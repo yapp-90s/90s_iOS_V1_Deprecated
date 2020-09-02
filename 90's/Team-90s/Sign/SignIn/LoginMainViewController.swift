@@ -31,11 +31,17 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
         setTextFieldObserver()
     }
     
+    //화면 터치시 키보드 내림
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        tfEmail.endEditing(true)
+        tfPass.endEditing(true)
+    }
+    
     @IBAction func goBack(_ sender: Any) {
         guard let count = navigationController?.viewControllers.count else { return }
-        if (count >= 2){
+        if count >= 2 {
             navigationController?.popViewController(animated: true)
-        }else {
+        } else {
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             appDelegate.switchEnterView()
         }
@@ -47,11 +53,10 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
         email = tfEmail.text!
         pass = tfPass.text!
         
-        
-        if(!email.validateEmail()){
+        if !email.validateEmail() {
             emailValidationLabel.isHidden = false
             selectorImageView1.image = UIImage(named: "path378Red")
-        }else{
+        } else {
             //로그인 통신
             //로그인 통신 후 로그인 실패시 메시지 표시
             emailValidationLabel.isHidden = true
@@ -73,9 +78,10 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
         authenVC.authenType = "findEmail"
         self.navigationController?.pushViewController(authenVC, animated: true)
     }
-    
-    
-    
+}
+
+
+extension LoginMainViewController {
     //로그인 서버통신 메소드(자체회원가입 -> 자체로그인)
     func goLogin(_ email: String, _ password: String?, _ social: Bool){
         SignService.shared.login(email: email, password: password, sosial: social, completion: { response in
@@ -92,9 +98,7 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
                     UserDefaults.standard.set(jwt, forKey: "jwt")
                     
                     UserDefaults.standard.set("", forKey: "defaultjwt")
-                   
                     isDefaultUser = false
-                    
                     let appDelegate = UIApplication.shared.delegate as! AppDelegate
                     appDelegate.switchTab()
                     break
@@ -121,16 +125,11 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
         self.present(alert, animated: true)
     }
     
-    //화면 터치시 키보드 내림
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        tfEmail.endEditing(true)
-        tfPass.endEditing(true)
-    }
     
     //키보드 리턴 버튼 클릭 시 키보드 내림
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        if(textField == tfEmail){
+        if textField == tfEmail {
             tfPass.becomeFirstResponder()
         }
         return true
@@ -145,7 +144,6 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
         loginBtn.isEnabled = false
         loginBtn.layer.cornerRadius = 8.0
         titleLabel.textLineSpacing(firstText: "환영합니다:)", secondText: "로그인해 주세요")
-        
     }
     
     //TextField에 대한 옵저버 처리
@@ -155,7 +153,7 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
             _ in
             let str = self.tfEmail.text!.trimmingCharacters(in: .whitespaces)
             
-            if(str != ""){
+            if !str.isEmpty {
                 self.selectorImageView1.image = UIImage(named: "path378Black")
                 self.tfPass.isEnabled = true
             }else {
@@ -171,7 +169,7 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
             _ in
             let str = self.tfPass.text!.trimmingCharacters(in: .whitespaces)
             
-            if(str != ""){
+            if !str.isEmpty {
                 self.selectorImageView2.image = UIImage(named: "path378Black")
                 self.loginBtn.backgroundColor = UIColor(red: 227/255, green: 62/255, blue: 40/255, alpha: 1.0)
                 self.loginBtn.isEnabled = true
@@ -194,11 +192,11 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
         let keyboardHeight = keyboardSize.cgRectValue.height
         
         let frameHeight = self.view.frame.height
-        print("\(frameHeight)")
-        if(frameHeight >= 736.0){
+        
+        if frameHeight >= 736.0 {
             //iphone6+, iphoneX ... (화면이 큰 휴대폰)
             buttonConst.constant = keyboardHeight - 18
-        }else if(!keyboardFlag){
+        } else if !keyboardFlag {
             //~iphone8, iphone7 (화면이 작은 휴대폰)
             keyboardFlag = true
             topConst.constant += 70
@@ -213,10 +211,10 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
         let keyboardHeight = keyboardSize.cgRectValue.height
         let frameHeight = self.view.frame.height
         
-        if(frameHeight >= 736.0){
+        if frameHeight >= 736.0 {
             //iphoneX~
             buttonConst.constant = 18
-        }else if(keyboardFlag){
+        } else if keyboardFlag {
             //~iphone8
             keyboardFlag = false
             topConst.constant -= 70
@@ -224,6 +222,4 @@ class LoginMainViewController: UIViewController, UITextFieldDelegate {
             self.view.layoutIfNeeded()
         }
     }
-    
-    
 }
