@@ -115,8 +115,8 @@ extension EmailViewController {
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:
-                    guard let data = response.data else { return }
-                    guard let checkEmailResult = try? JSONDecoder().decode(CheckEmailResult.self, from: data) else { return }
+                    guard let data = response.data,
+                          let checkEmailResult = try? JSONDecoder().decode(CheckEmailResult.self, from: data) else { return }
                     guard let isExist = checkEmailResult.result else { return }
                     if isExist {
                         self.emailValidationLabel.isHidden = false

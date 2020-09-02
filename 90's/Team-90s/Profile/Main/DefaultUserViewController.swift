@@ -11,6 +11,7 @@ import UIKit
 class DefaultUserViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var loginBtn: UIButton!
+    
     var titleStr: String = ""
     
     override func viewDidLoad() {
@@ -27,7 +28,4 @@ class DefaultUserViewController: UIViewController {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.switchSignIn()
     }
-    
-    
-    
 }

@@ -144,10 +144,9 @@ extension AuthenViewController {
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:
-                    guard let data = response.data else { return }
-                    let decoder = JSONDecoder()
-                    let telephoneAuthResult = try? decoder.decode(TelephoneAuthResult.self, from: data)
-                    guard let num = telephoneAuthResult?.num else { return }
+                    guard let data = response.data,
+                        let telephoneAuthResult = try? JSONDecoder().decode(TelephoneAuthResult.self, from: data) else { return }
+                    guard let num = telephoneAuthResult.num else { return }
                     self.authenNumber = num
                     break
                 case 401...404:
@@ -165,8 +164,9 @@ extension AuthenViewController {
     }
     
     func goAuthen(authenType : String){
-        guard let inputAuthenNumber = tfAuthenNumber.text else { return }
-        guard let number = authenNumber else { return }
+        guard let inputAuthenNumber = tfAuthenNumber.text,
+              let number = authenNumber else { return }
+        
         if inputAuthenNumber == number {
             switch authenType {
             case "findEmail":
@@ -191,19 +191,17 @@ extension AuthenViewController {
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:
-                    guard let data = response.data else { return }
-                    let decoder = JSONDecoder()
-                    guard let findEmailResult = try? decoder.decode(FindEmailResult.self, from: data) else { return }
+                    guard let data = response.data,
+                          let findEmailResult = try? JSONDecoder().decode(FindEmailResult.self, from: data) else { return }
                     let findEmailVC = self.storyboard?.instantiateViewController(withIdentifier: "FindEmailViewController") as! FindEmailViewController
                     findEmailVC.email = findEmailResult.email
                     findEmailVC.nickName = findEmailResult.name
                     self.navigationController?.pushViewController(findEmailVC, animated: true)
                     break
                 case 400:
-                    let decoder = JSONDecoder()
-                    guard let data = response.data else { return }
-                    guard let errResult = try? decoder.decode(FindEmailErrResult.self, from: data) else { return }
-                    if(errResult.message == "User is not exist"){
+                    guard let data = response.data,
+                          let errResult = try? JSONDecoder().decode(FindEmailErrResult.self, from: data) else { return }
+                    if errResult.message == "User is not exist" {
                         let findEmailErrVC = self.storyboard?.instantiateViewController(withIdentifier: "FindEmailErrViewController") as! FindEmailErrViewController
                         self.navigationController?.pushViewController(findEmailErrVC, animated: true)
                     }
@@ -244,11 +242,11 @@ extension AuthenViewController {
         let keyboardHeight = keyboardSize.cgRectValue.height
         
         let frameHeight = self.view.frame.height
-        print("\(frameHeight)")
-        if(frameHeight >= 736.0){
+        
+        if frameHeight >= 736.0 {
             //iphone6+, iphoneX ... (화면이 큰 휴대폰)
             buttonConst.constant = keyboardHeight - 18
-        }else if(!keyboardFlag){
+        } else if !keyboardFlag {
             //~iphone8, iphone7 (화면이 작은 휴대폰)
             keyboardFlag = true
             topConst.constant += 70
@@ -263,10 +261,10 @@ extension AuthenViewController {
         let keyboardHeight = keyboardSize.cgRectValue.height
         let frameHeight = self.view.frame.height
         
-        if(frameHeight >= 736.0){
+        if frameHeight >= 736.0 {
             //iphoneX~
             buttonConst.constant = 18
-        }else if(keyboardFlag){
+        }else if keyboardFlag {
             //~iphone8
             keyboardFlag = false
             topConst.constant -= 70

@@ -46,12 +46,10 @@ class ProfileVC: UIViewController {
         
         // iPhone X..
         if UIScreen.main.nativeBounds.height >= 1792.0 {
-            
             self.topConstraint.constant = 34
         }
             // iPhone 8..
-        else if UIScreen.main.nativeBounds.height <= 1334.0
-        {
+        else if UIScreen.main.nativeBounds.height <= 1334.0 {
             self.topConstraint.constant = 34 / 2
         }
     }
@@ -124,9 +122,8 @@ class ProfileVC: UIViewController {
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:
-                    guard let data = response.data else { return }
-                    let decoder = JSONDecoder()
-                    guard let profileResult = try? decoder.decode(ProfileResult.self, from: data) else { return }
+                    guard let data = response.data,
+                          let profileResult = try? JSONDecoder().decode(ProfileResult.self, from: data) else { return }
                     self.setProfileUI(profileResult)
                     break
                 case 401...500:
@@ -200,7 +197,7 @@ extension ProfileVC : UITableViewDelegate, UITableViewDataSource {
                 let defaultUserVC = storyboard?.instantiateViewController(withIdentifier: "DefaultUserViewController") as! DefaultUserViewController
                 defaultUserVC.titleStr = menuName
                 self.navigationController?.pushViewController(defaultUserVC, animated: true)
-            }else {
+            } else {
                 let orderVC = self.storyboard?.instantiateViewController(withIdentifier: "OrderListViewController") as! OrderListViewController
                 self.navigationController?.pushViewController(orderVC, animated: true)
             }
@@ -219,7 +216,7 @@ extension ProfileVC : UITableViewDelegate, UITableViewDataSource {
                 let defaultUserVC = storyboard?.instantiateViewController(withIdentifier: "DefaultUserViewController") as! DefaultUserViewController
                 defaultUserVC.titleStr = menuName
                 self.navigationController?.pushViewController(defaultUserVC, animated: true)
-            }else {
+            } else {
                 let settingVC = self.storyboard?.instantiateViewController(withIdentifier: "SettingViewController") as! SettingViewController
                 self.navigationController?.pushViewController(settingVC, animated: true)
             }

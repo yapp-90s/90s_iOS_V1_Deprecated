@@ -167,8 +167,8 @@ extension TelephoneAuthenViewController {
     
     func goAuthen(){
         //서버에서 보내준 인증번호와 입력한 인증번호가 일치하는지 확인
-        guard let inputAuthenNumber = tfAuthenNumber.text else { return }
-        guard let number = authenNumber else { return }
+        guard let inputAuthenNumber = tfAuthenNumber.text,
+              let number = authenNumber else { return }
         if inputAuthenNumber == number {
             goSign()
         } else {

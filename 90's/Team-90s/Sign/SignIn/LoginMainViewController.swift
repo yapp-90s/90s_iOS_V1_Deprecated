@@ -82,8 +82,8 @@ extension LoginMainViewController {
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:
-                    guard let data = response.data else { return }
-                    guard let loginResult = try? JSONDecoder().decode(SignUpResult.self, from: data) else {return}
+                    guard let data = response.data,
+                          let loginResult = try? JSONDecoder().decode(SignUpResult.self, from: data) else { return }
                     guard let jwt = loginResult.jwt else { return }
                     
                     UserDefaults.standard.set(self.email, forKey: "email")

@@ -139,7 +139,7 @@ extension PasswordViewController {
         if frameHeight >= 736.0 {
             //iphoneX~
             buttonConst.constant = 18
-        }else if keyboardFlag {
+        } else if keyboardFlag {
             //~iphone8
             keyboardFlag = false
             topConst.constant -= 70

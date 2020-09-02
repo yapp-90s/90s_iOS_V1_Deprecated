@@ -11,6 +11,7 @@ import UIKit
 class SNSViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var signUpBtn: UIButton!
+    
     var titleStr:String = ""
     
     override func viewDidLoad() {
@@ -27,6 +28,4 @@ class SNSViewController: UIViewController {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.switchSignUp()
     }
-    
-
 }

@@ -93,8 +93,8 @@ extension AlbumCompleteVC {
             if let status = response.response?.statusCode {
                 switch status {
                 case 200 :
-                    guard let data = response.data else {return}
-                    guard let uid = try? JSONDecoder().decode(AlbumCreateResult.self, from: data) else { return }
+                    guard let data = response.data,
+                          let uid = try? JSONDecoder().decode(AlbumCreateResult.self, from: data) else { return }
                     self.albumUid = uid.uid
                     self.albumCompleteBtn.isHidden = true
                     self.playAnimation()

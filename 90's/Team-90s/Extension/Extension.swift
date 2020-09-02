@@ -276,65 +276,6 @@ extension UIViewController{
         }
     }
 
-    // LUT Filter apply, filter 파일 코드 정리
-    func colorCubeFilterFromLUT(imageName : String, originalImage : UIImage)-> CIFilter? {
-        let size = 64
-        
-        let lutImage    = UIImage(named: imageName)!.cgImage
-        let lutWidth    = lutImage!.width
-        let lutHeight   = lutImage!.height
-        let rowCount    = lutHeight / size
-        let columnCount = lutWidth / size
-        
-        if ((lutWidth % size != 0) || (lutHeight % size != 0) || (rowCount * columnCount != size)) {
-            NSLog("Invalid colorLUT %@", imageName);
-            return nil
-        }
-        
-        let bitmap  = getBytesFromImage(image: UIImage(named: imageName))!
-        let floatSize = MemoryLayout<Float>.size
-        
-        let cubeData = UnsafeMutablePointer<Float>.allocate(capacity: size * size * size * 4 * floatSize)
-        var z = 0
-        var bitmapOffset = 0
-        
-        for _ in 0 ..< rowCount {
-            for y in 0 ..< size {
-                let tmp = z
-                for _ in 0 ..< columnCount {
-                    for x in 0 ..< size {
-                        let alpha   = Float(bitmap[bitmapOffset]) / 255.0
-                        let red     = Float(bitmap[bitmapOffset+1]) / 255.0
-                        let green   = Float(bitmap[bitmapOffset+2]) / 255.0
-                        let blue    = Float(bitmap[bitmapOffset+3]) / 255.0
-                        let dataOffset = (z * size * size + y * size + x) * 4
-                        
-                        cubeData[dataOffset + 3] = alpha
-                        cubeData[dataOffset + 2] = red
-                        cubeData[dataOffset + 1] = green
-                        cubeData[dataOffset + 0] = blue
-                        bitmapOffset += 4
-                    }
-                    z += 1
-                }
-                z = tmp
-            }
-            z += columnCount
-        }
-        
-        let colorCubeData = NSData(bytesNoCopy: cubeData, length: size * size * size * 4 * floatSize, freeWhenDone: true)
-        let ciOriginImage = CIImage(image: originalImage)
-        
-        // create CIColorCube Filter
-        let filter = CIFilter(name: "CIColorCube")
-        filter?.setValue(ciOriginImage, forKey: kCIInputImageKey)
-        filter?.setValue(colorCubeData, forKey: "inputCubeData")
-        filter?.setValue(size, forKey: "inputCubeDimension")
-        
-        return filter
-    }
-    
-    
     func getBytesFromImage(image: UIImage?) -> [UInt8]? {
         var pixelValues: [UInt8]?
         if let imageRef = image?.cgImage {
