@@ -16,16 +16,7 @@ class AlbumCoverVC: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     @IBAction func completeBtn(_ sender: UIButton) {
-        if initialFlag == false {
-            let nextVC = storyboard?.instantiateViewController(withIdentifier: "AlbumLayoutVC") as! AlbumLayoutVC
-            nextVC.albumName = albumName
-            nextVC.albumStartDate = albumStartDate
-            nextVC.albumEndDate = albumEndDate
-            nextVC.albumMaxCount = albumMaxCount
-            nextVC.albumCover = albumCover
-            nextVC.photo = photo
-            self.navigationController?.pushViewController(nextVC, animated: true)
-        }
+        clickCompleteBtn()
     }
     
     var albumName : String!
@@ -60,17 +51,30 @@ extension AlbumCoverVC {
         coverCollectionView.dataSource = self
         coverLabel.text = "앨범 커버를\n선택해 주세요"
     }
+    
+    func clickCompleteBtn(){
+        if initialFlag == false {
+            let nextVC = storyboard?.instantiateViewController(withIdentifier: "AlbumLayoutVC") as! AlbumLayoutVC
+            nextVC.albumName = albumName
+            nextVC.albumStartDate = albumStartDate
+            nextVC.albumEndDate = albumEndDate
+            nextVC.albumMaxCount = albumMaxCount
+            nextVC.albumCover = albumCover
+            nextVC.photo = photo
+            self.navigationController?.pushViewController(nextVC, animated: true)
+        }
+    }
 }
 
 
 extension AlbumCoverVC : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return CoverDatabase.arrayList.count
+        return CoverModel.arrayList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "albumcovercell", for: indexPath) as! AlbumCoverCollectionCell
-        cell.imageView.image = CoverDatabase.arrayList[indexPath.row].image
+        cell.imageView.image = CoverModel.arrayList[indexPath.row].image
         cell.selectImageView.isHidden = true
         return cell
     }
@@ -84,8 +88,8 @@ extension AlbumCoverVC : UICollectionViewDelegate, UICollectionViewDataSource, U
         selectedCell = cell
         cell.selectImageView.isHidden = false
         initialFlag = false
-        photo = CoverDatabase.arrayList[indexPath.row].image
-        coverImageView.image = CoverDatabase.arrayList[indexPath.row].image
+        photo = CoverModel.arrayList[indexPath.row].image
+        coverImageView.image = CoverModel.arrayList[indexPath.row].image
         albumCover = indexPath.row + 1
     }
 

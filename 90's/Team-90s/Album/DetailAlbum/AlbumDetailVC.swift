@@ -38,7 +38,6 @@ class AlbumDetailVC : UIViewController {
     
     // old filter
     private let context = CIContext(options: nil)
-    
     // 사진 순서 이동
     private var longPressGesture : UILongPressGestureRecognizer!
     var isArrangeEnded : Bool = true
@@ -163,6 +162,7 @@ extension AlbumDetailVC {
     }
 }
 
+
 extension AlbumDetailVC {
     func setZoomImageView(layout : AlbumLayout) -> CGSize {
         switch layout {
@@ -185,8 +185,8 @@ extension AlbumDetailVC {
                print("argument message : \(String(describing: argumentMsg))")
            }, failure: {(error) in
                print("error \(error)")
-           })
-       }
+        })
+    }
     
     func setOldFilter(image : UIImage) -> UIImage{
         let inputImage : CIImage = CIImage.init(image: image)!
@@ -285,14 +285,16 @@ extension AlbumDetailVC {
             if let status = response.response?.statusCode {
                 switch status {
                 case 200 :
-                    guard let data = response.data else {return}
-                    guard let value = try? JSONDecoder().decode(album.self, from: data) else {return}
+                    guard let data = response.data,
+                          let value = try? JSONDecoder().decode(album.self, from: data) else { return }
                     self.networkDetailAlbum = value
                     self.networkHeaderName = value.name
                     self.albumMaxCount = value.photoLimit
                     self.isAlbumComplete = value.complete
                     self.selectedLayout = self.getLayoutByUid(value: value.layoutUid)
-                    self.hideImageZoom.frame.size = CGSize(width: self.setZoomImageView(layout: self.selectedLayout).width - 60, height: self.setZoomImageView(layout: self.selectedLayout).height - 60)
+                    self.hideImageZoom.frame.size = CGSize(
+                        width: self.setZoomImageView(layout: self.selectedLayout).width - 60,
+                        height: self.setZoomImageView(layout: self.selectedLayout).height - 60)
                     self.albumOldCount = value.count
                     self.hideImageZoom.center = self.view.center
                     self.NetworkGetPhotoUid()
@@ -315,8 +317,8 @@ extension AlbumDetailVC {
             if let status = response.response?.statusCode {
             switch status {
             case 200:
-                guard let data = response.data else {return}
-                guard let value = try? JSONDecoder().decode([PhotoGetPhotosData].self, from: data) else {return}
+                guard let data = response.data,
+                      let value = try? JSONDecoder().decode([PhotoGetPhotosData].self, from: data) else {return}
                 
                 self.networkHedaerCount = self.photoUidArray.count
                 self.photoUidArray = value.sorted { $0.photoOrder < $1.photoOrder }
@@ -357,7 +359,7 @@ extension AlbumDetailVC {
                 })
             }
         }
-        isAlbumComplete = photoUidArray.count+1 <= albumMaxCount ? false : true
+        isAlbumComplete = photoUidArray.count + 1 <= albumMaxCount ? false : true
         switchAlbumComplete(value: isAlbumComplete)
         addPhotoBtn.isHidden = isDefaultUser ? true : false
     }

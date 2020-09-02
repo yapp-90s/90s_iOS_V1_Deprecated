@@ -21,62 +21,6 @@ class EnterViewController: UIViewController {
     @IBOutlet weak var appleLoginView: UIView!
     @IBOutlet weak var designedAppleView: UIView!
     
-    var initialEnter:Bool = true
-    var socialEmail:String = ""
-    var socialName:String = ""
-    var isRevokedAppleId = false
-    var isAppleId = false
-    var isInitialAppleLogin = true
-    
-    override func viewWillAppear(_ animated: Bool) {
-        if initialEnter {
-            autoLogin()
-        }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        if #available(iOS 13.0, *) {
-            designedAppleView.layer.cornerRadius = 8.0
-            designedAppleView.isUserInteractionEnabled = false
-
-            //애플로그인 버튼 생성
-            let button = ASAuthorizationAppleIDButton()
-            button.addTarget(self, action: #selector(handleAuthorizationAppleIDButtonPress)
-                , for: .touchUpInside)
-            button.cornerRadius = 8.0
-            appleLoginView.addSubview(button)
-            
-            //버튼에 constraint 추가
-            button.translatesAutoresizingMaskIntoConstraints = false
-            button.bottomAnchor.constraint(equalTo: appleLoginView.bottomAnchor).isActive = true
-            button.topAnchor.constraint(equalTo: appleLoginView.topAnchor).isActive = true
-            button.leftAnchor.constraint(equalTo: appleLoginView.leftAnchor).isActive = true
-            button.rightAnchor.constraint(equalTo: appleLoginView.rightAnchor).isActive = true
-        }else {
-            designedAppleView.isHidden = true
-        }
-        
-        setUI()
-    }
-    
-    func autoLogin(){
-        //기존에 로그인한 데이터가 있을 경우
-        if let email = UserDefaults.standard.string(forKey: "email"){
-            //소셜 로그인의 경우 애플아이디 제외 자동로그인
-            if(UserDefaults.standard.bool(forKey: "social")){
-                if(!UserDefaults.standard.bool(forKey: "isAppleId")){
-                    goLogin(email, nil, true)
-                }
-            }else {
-                //자체 로그인
-                guard let password = UserDefaults.standard.string(forKey: "password") else {return}
-                goLogin(email, password, false)
-            }
-        }
-    }
-    
-    
     //둘러보기 버튼 클릭 시
     @IBAction func takeALook(_ sender: Any) {
         //default 유저 값 받아옴,메인화면으로 이동
@@ -96,6 +40,65 @@ class EnterViewController: UIViewController {
         let termVC = signUpSB.instantiateViewController(withIdentifier: "TermViewController") as! TermViewController
         navigationController?.pushViewController(termVC, animated: true)
     }
+    
+    //카카오톡 회원가입
+    @IBAction func goKaKaoLogin(_ sender: Any) {
+        signKakaoLogin()
+    }
+    
+    var initialEnter : Bool = true
+    var socialEmail : String = ""
+    var socialName : String = ""
+    var isRevokedAppleId = false
+    var isAppleId = false
+    var isInitialAppleLogin = true
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if initialEnter {
+            autoLogin()
+        }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        if #available(iOS 13.0, *) {
+            designedAppleView.layer.cornerRadius = 8.0
+            designedAppleView.isUserInteractionEnabled = false
+
+            //애플로그인 버튼 생성
+            let button = ASAuthorizationAppleIDButton()
+            button.addTarget(self, action: #selector(handleAuthorizationAppleIDButtonPress)
+                , for: .touchUpInside)
+            button.cornerRadius = 8.0
+            appleLoginView.addSubview(button)
+            setSubViewFrameSetting(view: appleLoginView, subView: button, top: 0, left: 0, right: 0, bottom: 0)
+
+        } else {
+            designedAppleView.isHidden = true
+        }
+        setUI()
+    }
+}
+
+
+extension EnterViewController {
+    func autoLogin(){
+        //기존에 로그인한 데이터가 있을 경우
+        if let email = UserDefaults.standard.string(forKey: "email"){
+            //소셜 로그인의 경우 애플아이디 제외 자동로그인
+            if UserDefaults.standard.bool(forKey: "social"){
+                if !UserDefaults.standard.bool(forKey: "isAppleId"){
+                    goLogin(email, nil, true)
+                }
+            } else {
+                //자체 로그인
+                guard let password = UserDefaults.standard.string(forKey: "password") else { return }
+                goLogin(email, password, false)
+            }
+        }
+    }
+    
     
     //애플 로그인 버튼 클릭 시
     @available(iOS 13.0, *)
@@ -124,10 +127,7 @@ class EnterViewController: UIViewController {
     }
     
     
-    
-    //카카오톡 회원가입
-    @IBAction func goKaKaoLogin(_ sender: Any) {
-        
+    func signKakaoLogin(){
         //싱글톤 객체 생성
         guard let session = KOSession.shared() else {
             return
@@ -138,13 +138,13 @@ class EnterViewController: UIViewController {
             session.close()
         }
         
-        session.open { (error) in
-            if(session.isOpen()){
+        session.open { error in
+            if session.isOpen() {
                 KOSessionTask.accessTokenInfoTask(completionHandler: {
                     (accesstokenInfo, tokenErr) in
                     if let error = tokenErr as NSError? {
                         self.showErrAlert()
-                        switch error.code{
+                        switch error.code {
                         case 5:
                             print("세션이 만료된(access_token, refresh_token이 모두 만료된 경우) 상태")
                             break
@@ -152,33 +152,28 @@ class EnterViewController: UIViewController {
                             print("예기치 못한 에러, 서버에러 ")
                             break
                         }
-                    }else {
+                    } else {
                         print("success request - access token info: \(accesstokenInfo!)")
                     }
                 })
                 
                 KOSessionTask.userMeTask(completion: { (userInfoErr, user) in
-                    print("\(user)")
                     guard let user = user,
                         let email = user.account?.email,
                         let nickName = user.account?.profile?.nickname
                         else {
                             self.unlinkKaKaoLogin()
                             return
-                    }
+                        }
                     self.socialEmail = email
                     self.socialName = nickName
-                    
-                    print("\(self.socialEmail)")
                     //로그아웃 후 재 로그인하는 경우와(이미 회원) 회원가입하는 경우 분기 위해 이메일 체크
                     self.checkEmail()
                 })
-                
-            }else {
+            } else {
                 print("로그인 에러: \(error)")
             }
         }
-        
     }
     
     func unlinkKaKaoLogin(){
@@ -189,9 +184,7 @@ class EnterViewController: UIViewController {
             }else {
                 print("\(err)")
             }
-            
         })
-        
     }
     
     func setUI(){
@@ -369,7 +362,6 @@ ASAuthorizationControllerPresentationContextProviding {
         return self.view.window!
     }
     
-    
     //로그인 후 응답을 받는 부분
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         if let credential = authorization.credential as? ASAuthorizationAppleIDCredential {
@@ -378,10 +370,8 @@ ASAuthorizationControllerPresentationContextProviding {
             let appleEmail = "\(credential.email ?? "")"
             self.isAppleId = true
             
-            print("userIdentifier \(userIdentifer)")
-            
             //애플 email은 처음인증시에만 이름과 이메일을 던져주므로 인증했을 때 정보를 저장하고 지우지 않음
-            if(appleName != "" && appleEmail != ""){
+            if !appleName.isEmpty && !appleEmail.isEmpty {
                 //애플로 회원가입 -> 첫 인증
                 UserDefaults.standard.set(appleEmail, forKey: "appleEmail")
                 UserDefaults.standard.set(appleName, forKey: "appleName")
@@ -414,7 +404,4 @@ ASAuthorizationControllerPresentationContextProviding {
             })
         }
     }
-    
-    
-    
 }

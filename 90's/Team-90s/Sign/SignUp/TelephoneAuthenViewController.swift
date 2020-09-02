@@ -43,21 +43,26 @@ class TelephoneAuthenViewController: UIViewController {
         setObserver()
     }
     
+    //화면 터치시 키보드 내림
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        tfTelephone.endEditing(true)
+        tfAuthenNumber.endEditing(true)
+    }
+    
     @IBAction func goBack(_ sender: Any) {
         //소셜로그인일 시 뒤로가기 클릭 시 메인화면
-        if(isSocial){
+        if isSocial {
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             appDelegate.switchEnterView()
-        }else {
+        } else {
             //아닐 시 닉네임 입력화면
             navigationController?.popViewController(animated: true)
         }
-        
     }
     
     //전송 버튼 클릭 시
     @IBAction func askNumber(_ sender: Any) {
-        if(!authenFlag){
+        if !authenFlag {
             askNumberBtn.setTitle("재전송", for: .normal)
             authenFlag = true
         }
@@ -69,8 +74,9 @@ class TelephoneAuthenViewController: UIViewController {
     @IBAction func clickOkBtn(_ sender: Any) {
         goAuthen()
     }
-    
-    //UI
+}
+
+extension TelephoneAuthenViewController {
     func setUI(){
         validationLabel.isHidden = true
         okBtn.isEnabled = false
@@ -78,7 +84,7 @@ class TelephoneAuthenViewController: UIViewController {
         askNumberBtn.layer.cornerRadius = 8.0
         titleLabel.textLineSpacing(firstText: "마지막 단계입니다!", secondText: "전화번호를 입력해 주세요")
         
-        if(isSocial){
+        if isSocial {
             pathImageVIew.isHidden = true
             numberLabel.isHidden = true
         }
@@ -90,36 +96,35 @@ class TelephoneAuthenViewController: UIViewController {
             _ in
             let str = self.tfTelephone.text!.trimmingCharacters(in: .whitespaces)
             
-            if(str != ""){
-                if(str.count == 3 && !self.isInitial1 ){
+            if !str.isEmpty {
+                if str.count == 3 && !self.isInitial1  {
                     self.tfTelephone.text = self.tfTelephone.text! + "-"
                     self.isInitial1 = true
-                }else if(str.count == 8 && !self.isInitial2){
+                } else if str.count == 8 && !self.isInitial2 {
                     self.tfTelephone.text = self.tfTelephone.text! + "-"
                     self.isInitial2 = true
                 }
                 self.selectorImageView1.image = UIImage(named: "path378Black")
                 self.askNumberBtn.backgroundColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1.0)
                 self.askNumberBtn.isEnabled = true
-            }else {
+            } else {
                 self.isInitial1 = false
                 self.isInitial2 = false
                 self.selectorImageView1.image = UIImage(named: "path378Grey1")
                 self.askNumberBtn.backgroundColor = UIColor(red: 199/255, green: 201/255, blue: 208/255, alpha: 1.0)
                 self.askNumberBtn.isEnabled = false
             }
-            
         })
         
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: tfAuthenNumber, queue: .main, using : {
             _ in
             let str = self.tfAuthenNumber.text!.trimmingCharacters(in: .whitespaces)
             
-            if(str != ""){
+            if !str.isEmpty {
                 self.selectorImageView2.image = UIImage(named: "path378Black")
                 self.okBtn.backgroundColor = UIColor(red: 227/255, green: 62/255, blue: 40/255, alpha: 1.0)
                 self.okBtn.isEnabled = true
-            }else {
+            } else {
                 self.selectorImageView2.image = UIImage(named: "path378Grey1")
                 self.okBtn.backgroundColor =  UIColor(red: 199/255, green: 201/255, blue: 208/255, alpha: 1.0)
                 self.okBtn.isEnabled = false
@@ -141,9 +146,8 @@ class TelephoneAuthenViewController: UIViewController {
                 switch status {
                 case 200:
                     guard let data = response.data else { return }
-                    let decoder = JSONDecoder()
-                    let telephoneAuthResult = try? decoder.decode(TelephoneAuthResult.self, from: data)
-                    guard let num = telephoneAuthResult?.num else { return }
+                    guard let telephoneAuthResult = try? JSONDecoder().decode(TelephoneAuthResult.self, from: data) else { return }
+                    guard let num = telephoneAuthResult.num else { return }
                     self.authenNumber = num
                     print("send telephone certification success")
                     break
@@ -163,11 +167,11 @@ class TelephoneAuthenViewController: UIViewController {
     
     func goAuthen(){
         //서버에서 보내준 인증번호와 입력한 인증번호가 일치하는지 확인
-        guard let inputAuthenNumber = tfAuthenNumber.text else { return }
-        guard let number = authenNumber else { return }
-        if(inputAuthenNumber == number){
+        guard let inputAuthenNumber = tfAuthenNumber.text,
+              let number = authenNumber else { return }
+        if inputAuthenNumber == number {
             goSign()
-        }else{
+        } else {
             validationLabel.isHidden = false
         }
     }
@@ -180,12 +184,11 @@ class TelephoneAuthenViewController: UIViewController {
                 switch status {
                 case 200:
                     guard let data = response.data else { return }
-                    let decoder = JSONDecoder()
-                    let signUpResult = try? decoder.decode(SignUpResult.self, from: data)
-                    guard let jwt = signUpResult?.jwt else { return }
+                    guard let signUpResult = try? JSONDecoder().decode(SignUpResult.self, from: data) else { return }
+                    guard let jwt = signUpResult.jwt else { return }
                     
                     //소셜로그인일때만 정보저장(회원가입이 곧 로그인이 되기 때문)
-                    if(self.isSocial){
+                    if self.isSocial {
                         UserDefaults.standard.set(self.email, forKey: "email")
                         UserDefaults.standard.set(self.isSocial, forKey: "social")
                         UserDefaults.standard.set(jwt, forKey: "jwt")
@@ -218,18 +221,22 @@ class TelephoneAuthenViewController: UIViewController {
         self.present(alert, animated: true)
     }
     
+    //키보드 리턴 버튼 클릭 시 키보드 내림
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        tfTelephone.resignFirstResponder()
+        return true
+    }
     
     @objc func keyboardWillShow(_ notification: Notification) {
         let userInfo = notification.userInfo
         let keyboardSize = userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue
         let keyboardHeight = keyboardSize.cgRectValue.height
-        
         let frameHeight = self.view.frame.height
-        print("\(frameHeight)")
-        if(frameHeight >= 736.0){
+        
+        if frameHeight >= 736.0 {
             //iphone6+, iphoneX ... (화면이 큰 휴대폰)
             buttonConst.constant = keyboardHeight - 18
-        }else if(!keyboardFlag){
+        } else if !keyboardFlag {
             //~iphone8, iphone7 (화면이 작은 휴대폰)
             keyboardFlag = true
             topConst.constant += 70
@@ -244,10 +251,10 @@ class TelephoneAuthenViewController: UIViewController {
         let keyboardHeight = keyboardSize.cgRectValue.height
         let frameHeight = self.view.frame.height
         
-        if(frameHeight >= 736.0){
+        if frameHeight >= 736.0 {
             //iphoneX~
             buttonConst.constant = 18
-        }else if(keyboardFlag){
+        } else if keyboardFlag {
             //~iphone8
             keyboardFlag = false
             topConst.constant -= 70
@@ -255,19 +262,4 @@ class TelephoneAuthenViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
-    
-    
-    
-    //화면 터치시 키보드 내림
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        tfTelephone.endEditing(true)
-        tfAuthenNumber.endEditing(true)
-    }
-    
-    //키보드 리턴 버튼 클릭 시 키보드 내림
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        tfTelephone.resignFirstResponder()
-        return true
-    }
-    
 }

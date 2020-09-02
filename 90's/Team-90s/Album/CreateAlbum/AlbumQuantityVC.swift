@@ -8,11 +8,20 @@ class AlbumQuantityVC : UIViewController {
     @IBOutlet weak var selectorLabel: UILabel!
     @IBOutlet weak var nextBtn: UIButton!
     @IBOutlet weak var buttonConstraint: NSLayoutConstraint!
+    
     @IBAction func cancleBtn(_ sender: UIButton) {
         self.navigationController?.popToRootViewController(animated: true)
     }
     @IBAction func backBtn(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
+    }
+    @IBAction func clickNextBtn(_ sender: Any) {
+        let nextVC = storyboard?.instantiateViewController(withIdentifier: "AlbumCoverVC") as! AlbumCoverVC
+        nextVC.albumName = albumName
+        nextVC.albumStartDate = albumStartDate
+        nextVC.albumEndDate = albumEndDate
+        nextVC.albumMaxCount = albumMaxCount
+        self.navigationController?.pushViewController(nextVC, animated: true)
     }
     
     let quantityPicker = UIPickerView()
@@ -26,34 +35,6 @@ class AlbumQuantityVC : UIViewController {
         keyboardSetting()
         setQuantityPicker()
         defaultSetting()
-    }
-    
-    @IBAction func clickNextBtn(_ sender: Any) {
-        let nextVC = storyboard?.instantiateViewController(withIdentifier: "AlbumCoverVC") as! AlbumCoverVC
-            
-        nextVC.albumName = albumName
-        nextVC.albumStartDate = albumStartDate
-        nextVC.albumEndDate = albumEndDate
-        nextVC.albumMaxCount = albumMaxCount
-            
-        self.navigationController?.pushViewController(nextVC, animated: true)
-    }
-    
-    
-    func defaultSetting(){
-        quantityLabel.textLineSpacing(firstText: "앨범에 들어갈", secondText: "사진의 수량을 정해 주세요")
-        self.selectorLabel.backgroundColor = UIColor.black
-        self.nextBtn.switchComplete(next: true)
-        tfQuantity.text = "4"
-    }
-    
-    func setQuantityPicker(){
-        quantityPicker.delegate = self
-        quantityPicker.dataSource = self
-        quantityPicker.backgroundColor = .white
-        tfQuantity.inputView = quantityPicker
-        nextBtn.layer.cornerRadius = 10
-        tfQuantity.becomeFirstResponder()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -90,6 +71,22 @@ extension AlbumQuantityVC : UIPickerViewDataSource {
 
 
 extension AlbumQuantityVC {
+    func defaultSetting(){
+        quantityLabel.textLineSpacing(firstText: "앨범에 들어갈", secondText: "사진의 수량을 정해 주세요")
+        self.selectorLabel.backgroundColor = UIColor.black
+        self.nextBtn.switchComplete(next: true)
+        tfQuantity.text = "4"
+    }
+       
+    func setQuantityPicker(){
+        quantityPicker.delegate = self
+        quantityPicker.dataSource = self
+        quantityPicker.backgroundColor = .white
+        tfQuantity.inputView = quantityPicker
+        nextBtn.layer.cornerRadius = 10
+        tfQuantity.becomeFirstResponder()
+    }
+    
     func keyboardSetting(){
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)

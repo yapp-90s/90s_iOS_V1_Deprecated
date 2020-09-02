@@ -13,19 +13,7 @@ class AlbumLayoutVC: UIViewController {
     @IBOutlet weak var layoutLabel: UILabel!
     @IBOutlet weak var layoutCollectionView: UICollectionView!
     @IBAction func completeBtn(_ sender: UIButton) {
-        if initialFlag == false {
-            let nextVC = storyboard?.instantiateViewController(withIdentifier: "AlbumCompleteVC") as! AlbumCompleteVC
-                   
-            nextVC.albumName = albumName
-            nextVC.albumStartDate = albumStartDate
-            nextVC.albumEndDate = albumEndDate
-            nextVC.albumMaxCount = albumMaxCount
-            nextVC.albumCover = albumCover
-            nextVC.photo = photo
-            nextVC.albumLayout = albumLayout
-                    
-            self.navigationController?.pushViewController(nextVC, animated: true)
-        }
+        clickCompleteBtn()
     }
     @IBAction func layoutPreviewBtn(_ sender: UIButton) {
         if initialFlag == false {
@@ -84,6 +72,22 @@ extension AlbumLayoutVC {
         layoutCollectionView.dataSource = self
         layoutLabel.textLineSpacing(firstText: "앨범 레이아웃을", secondText: "선택해 주세요")
     }
+    
+    func clickCompleteBtn(){
+        if initialFlag == false {
+            let nextVC = storyboard?.instantiateViewController(withIdentifier: "AlbumCompleteVC") as! AlbumCompleteVC
+                   
+            nextVC.albumName = albumName
+            nextVC.albumStartDate = albumStartDate
+            nextVC.albumEndDate = albumEndDate
+            nextVC.albumMaxCount = albumMaxCount
+            nextVC.albumCover = albumCover
+            nextVC.photo = photo
+            nextVC.albumLayout = albumLayout
+                    
+            self.navigationController?.pushViewController(nextVC, animated: true)
+        }
+    }
 }
 
 
@@ -100,7 +104,7 @@ extension AlbumLayoutVC : UICollectionViewDelegate, UICollectionViewDataSource, 
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         layoutImageView.image = layoutImageArray[indexPath.row]
-        albumLayout = LayoutDatabase.arrayList[indexPath.row]
+        albumLayout = LayoutModel.arrayList[indexPath.row]
         initialFlag = false
         
         let cell = collectionView.cellForItem(at: indexPath) as! albumLayoutCollectionCell

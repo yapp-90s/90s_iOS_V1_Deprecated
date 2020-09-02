@@ -43,7 +43,7 @@ class NicknameViewController: UIViewController, UITextFieldDelegate {
     func setUI(){
         tfNickname.delegate = self
         nextBtn.layer.cornerRadius = 8.0
-         titleLabel.textLineSpacing(firstText: "닉네임을", secondText: "입력해 주세요")
+        titleLabel.textLineSpacing(firstText: "닉네임을", secondText: "입력해 주세요")
     }
     
     func setObserver(){
@@ -52,11 +52,11 @@ class NicknameViewController: UIViewController, UITextFieldDelegate {
             _ in
             let str = self.tfNickname.text!.trimmingCharacters(in: .whitespaces)
             
-            if(str != ""){
+            if !str.isEmpty {
                 self.selectorImageView.image = UIImage(named: "path378Black")
                 self.nextBtn.backgroundColor = UIColor(red: 227/255, green: 62/255, blue: 40/255, alpha: 1.0)
                 self.nextBtn.isEnabled = true
-            }else {
+            } else {
                 self.selectorImageView.image = UIImage(named: "path378Grey1")
                 self.nextBtn.backgroundColor = UIColor(red: 199/255,green: 201/255, blue: 208/255, alpha: 1.0)
                 self.nextBtn.isEnabled = false
@@ -72,12 +72,7 @@ class NicknameViewController: UIViewController, UITextFieldDelegate {
         let userInfo = notification.userInfo
         let keyboardSize = userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue
         let keyboardHeight = keyboardSize.cgRectValue.height
-        
-        if(keyboardHeight > 300){
-            buttonConst.constant = keyboardHeight - 18
-        }else{
-            buttonConst.constant = keyboardHeight + 18
-        }
+        buttonConst.constant = keyboardHeight > 300 ? keyboardHeight - 18 : keyboardHeight + 18
     }
     
     @objc func keyboardWillHide(_ notification: Notification) {

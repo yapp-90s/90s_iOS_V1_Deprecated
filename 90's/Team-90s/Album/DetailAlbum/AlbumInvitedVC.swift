@@ -16,7 +16,7 @@ class AlbumInvitedVC: UIViewController {
     @IBOutlet weak var albumCompleteBtn: UIButton!
     @IBOutlet weak var albumCancleBtn: UIButton!
     @IBAction func cancleBtn(_ sender: UIButton) {
-        // 앱 종료
+        ////  Todo : 앱 종료 코드 작성
     }
     // 비회원
     @IBOutlet weak var terminateView: UIView!
@@ -132,10 +132,9 @@ extension AlbumInvitedVC {
             if let status = response.response?.statusCode {
                 switch status {
                 case 200:
-                    guard let data = response.data else { return }
-                    let decoder = JSONDecoder()
-                    let loginResult = try? decoder.decode(SignUpResult.self, from: data)
-                    guard let jwt = loginResult?.jwt else { return }
+                    guard let data = response.data,
+                        let loginResult = try? JSONDecoder().decode(SignUpResult.self, from: data) else { return }
+                    guard let jwt = loginResult.jwt else { return }
                     
                     //자동로그인 될때마다 jwt 갱신해서 저장
                     UserDefaults.standard.set(jwt, forKey: "jwt")
@@ -158,8 +157,8 @@ extension AlbumInvitedVC {
             if let status = response.response?.statusCode {
                 switch status {
                 case 200 :
-                    guard let data = response.data else { return }
-                    guard let value = try? JSONDecoder().decode(album.self, from: data) else { return }
+                    guard let data = response.data,
+                          let value = try? JSONDecoder().decode(album.self, from: data) else { return }
                     self.presentDetailAlbum(albumUid: value.uid)
                     case 401:
                         print("\(status) : bad request, no warning in Server")

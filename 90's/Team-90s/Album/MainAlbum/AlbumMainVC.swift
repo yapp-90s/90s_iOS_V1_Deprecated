@@ -50,17 +50,17 @@ extension AlbumMainVC {
     }
     
     func switchAlbumEmptyView(value : Bool){
-           switch value {
-           case true:
-               self.emptyAlbumView.isHidden = true
-               self.emptyAlbumMakeBtn.isEnabled = false
-               self.albumView.isHidden = false
-           case false:
-               self.emptyAlbumView.isHidden = false
-               self.emptyAlbumMakeBtn.isEnabled = true
-               self.albumView.isHidden = true
-           }
-       }
+        switch value {
+        case true:
+            self.emptyAlbumView.isHidden = true
+            self.emptyAlbumMakeBtn.isEnabled = false
+            self.albumView.isHidden = false
+        case false:
+            self.emptyAlbumView.isHidden = false
+            self.emptyAlbumMakeBtn.isEnabled = true
+            self.albumView.isHidden = true
+        }
+    }
     
     func networkSetting(){
         AlbumService.shared.resetToken()
@@ -68,8 +68,8 @@ extension AlbumMainVC {
             if let status = response.response?.statusCode {
                 switch status {
                 case 200 :
-                    guard let data = response.data else {return}
-                    guard let value = try? JSONDecoder().decode([album].self, from: data) else {return}
+                    guard let data = response.data,
+                          let value = try? JSONDecoder().decode([album].self, from: data) else { return }
                     self.albumUidArray = value.map { $0.uid }
                     self.albumNameArray = value.map { $0.name }
                     self.albumCoverUidArray = value.map { $0.cover.uid }

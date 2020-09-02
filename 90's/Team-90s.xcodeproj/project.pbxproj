@@ -393,9 +393,9 @@
 		6513F11724E929FC005BAA34 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				6513F12224E929FD005BAA34 /* APIMagager.swift */,
 				6513F11824E929FC005BAA34 /* Extension.swift */,
 				6513F11924E929FC005BAA34 /* Font */,
-				6513F12224E929FD005BAA34 /* APIMagager.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";

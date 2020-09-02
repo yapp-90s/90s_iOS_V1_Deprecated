@@ -13,6 +13,7 @@ class FindEmailViewController: UIViewController {
     @IBOutlet weak var loginBtn: UIButton!
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var nickNameLabel: UILabel!
+    
     var email:String!
     var nickName:String!
     
@@ -35,5 +36,4 @@ class FindEmailViewController: UIViewController {
         nickNameLabel.text = nickName
         titleLabel.textLineSpacing(firstText: "이메일을", secondText: "찾았습니다!")
     }
-    
 }

@@ -131,7 +131,7 @@ extension SavePhotoVC {
         renderImage = renderer.image { ctx in
             imageView.drawHierarchy(in: imageView.bounds, afterScreenUpdates: true)
         }
-        guard let image = renderImage else {return}
+        guard let image = renderImage else { return }
         
         AlbumService.shared.photoUpload(albumUid: albumUid, image: [image], imageName: imageName, completion: {
             response in

@@ -16,6 +16,7 @@ class LeaveReasonViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var reasonTableView: UITableView!
     @IBOutlet weak var leaveBtn:UIButton!
+    
     var reasonClickFlag = false
     
     let reasonArray = ["사용하기 어려워요", "오류가 많아서 불편해요", "흥미가 없어졌어요","기타"]
@@ -53,7 +54,6 @@ class LeaveReasonViewController: UIViewController {
                     if let appDomain = Bundle.main.bundleIdentifier {
                         UserDefaults.standard.removePersistentDomain(forName: appDomain)
                     }
-
                     let appDelegate = UIApplication.shared.delegate as! AppDelegate
                     appDelegate.switchEnterView()
                     break
@@ -72,7 +72,6 @@ class LeaveReasonViewController: UIViewController {
         alert.addAction(action)
         self.present(alert, animated: true)
     }
-    
 }
 
 
@@ -87,11 +86,7 @@ extension LeaveReasonViewController: UITableViewDelegate, UITableViewDataSource 
         cell.indexPath = indexPath
         
         if let selectedIndex = self.selectedIndexPath {
-            if(selectedIndex != indexPath) {
-                cell.isClicked = false
-            }else {
-                cell.isClicked = true
-            }
+            cell.isClicked = selectedIndex != indexPath ? false : true
         }
         
         cell.clickReasonDelegate = self
@@ -105,7 +100,7 @@ extension LeaveReasonViewController: UITableViewDelegate, UITableViewDataSource 
 extension LeaveReasonViewController: clickReasonDelegate {
     func clickReason(_ indexPath: IndexPath) {
         self.selectedIndexPath = indexPath
-        if(!reasonClickFlag){
+        if !reasonClickFlag {
             reasonClickFlag = true
             self.leaveBtn.backgroundColor =  UIColor(red: 227/255, green: 62/255, blue: 40/255, alpha: 1.0)
             self.leaveBtn.isEnabled = true
