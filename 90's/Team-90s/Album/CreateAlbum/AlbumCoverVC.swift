@@ -65,12 +65,12 @@ extension AlbumCoverVC {
 
 extension AlbumCoverVC : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return CoverDatabase.arrayList.count
+        return CoverModel.arrayList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "albumcovercell", for: indexPath) as! AlbumCoverCollectionCell
-        cell.imageView.image = CoverDatabase.arrayList[indexPath.row].image
+        cell.imageView.image = CoverModel.arrayList[indexPath.row].image
         cell.selectImageView.isHidden = true
         return cell
     }
@@ -84,8 +84,8 @@ extension AlbumCoverVC : UICollectionViewDelegate, UICollectionViewDataSource, U
         selectedCell = cell
         cell.selectImageView.isHidden = false
         initialFlag = false
-        photo = CoverDatabase.arrayList[indexPath.row].image
-        coverImageView.image = CoverDatabase.arrayList[indexPath.row].image
+        photo = CoverModel.arrayList[indexPath.row].image
+        coverImageView.image = CoverModel.arrayList[indexPath.row].image
         albumCover = indexPath.row + 1
     }
 

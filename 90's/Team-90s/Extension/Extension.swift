@@ -45,27 +45,6 @@ extension Int {
 
 
 extension UILabel {
-    func setLineSpacing(lineSpacing: CGFloat = 0.0, lineHeightMultiple: CGFloat = 0.0) {
-
-        guard let labelText = self.text else { return }
-
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = lineSpacing
-        paragraphStyle.lineHeightMultiple = lineHeightMultiple
-
-        let attributedString:NSMutableAttributedString
-        if let labelattributedText = self.attributedText {
-            attributedString = NSMutableAttributedString(attributedString: labelattributedText)
-        } else {
-            attributedString = NSMutableAttributedString(string: labelText)
-        }
-
-        // Line spacing attribute
-        attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attributedString.length))
-
-        self.attributedText = attributedString
-    }
-    
     func textLineSpacing(firstText : String, secondText : String?){
         let style = NSMutableParagraphStyle()
         let attrString = NSMutableAttributedString()
@@ -105,6 +84,128 @@ extension UITextField {
        self.leftViewMode = ViewMode.always
      }
 }
+
+
+extension UIInterfaceOrientation {
+    var videoOrientation: AVCaptureVideoOrientation? {
+        switch self {
+        case .portraitUpsideDown: return .portraitUpsideDown
+        case .landscapeRight: return .landscapeRight
+        case .landscapeLeft: return .landscapeLeft
+        case .portrait: return .portrait
+        default: return nil
+        }
+    }
+}
+
+
+extension UIColor {
+    class func colorRGBHex(hex:Int, alpha: Float = 1.0) -> UIColor {
+        let r = Float((hex >> 16) & 0xFF)
+        let g = Float((hex >> 8) & 0xFF)
+        let b = Float((hex) & 0xFF)
+        return UIColor(red: CGFloat(r/255.0), green: CGFloat(g/255.0), blue:CGFloat(b/255.0), alpha : CGFloat(alpha))
+    }
+}
+
+
+extension UIImage {
+    func mergeWith(topImage: UIImage,bottomImage: UIImage) -> UIImage {
+        UIGraphicsBeginImageContext(size)
+        
+        let areaSize = CGRect(x: 0, y: 0, width: bottomImage.size.width, height: bottomImage.size.height)
+        bottomImage.draw(in: areaSize)
+        
+        topImage.draw(in: areaSize, blendMode: .normal, alpha: 1.0)
+        
+        let mergedImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return mergedImage
+    }
+    
+    func resizeImage(image: UIImage, newSize: CGSize) -> (UIImage) {
+        let newRect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height).integral
+        UIGraphicsBeginImageContextWithOptions(newSize, true, 0)
+        let context = UIGraphicsGetCurrentContext()
+
+        // Set the quality level to use when rescaling
+        context!.interpolationQuality = CGInterpolationQuality.default
+        let flipVertical = CGAffineTransform(a: 1, b: 0, c: 0, d: -1, tx: 0, ty: newSize.height )
+        context!.concatenate(flipVertical)
+
+        // Draw into the context; this scales the image
+        context?.draw(image.cgImage!, in: CGRect(x: 0.0,y: 0.0, width: newRect.width, height: newRect.height))
+
+        let newImageRef = context!.makeImage()! as CGImage
+        let newImage = UIImage(cgImage: newImageRef)
+
+        // Get the resized image from the context and a UIImage
+        UIGraphicsEndImageContext()
+
+        return newImage
+    }
+    
+    func imageResize (sizeChange:CGSize)-> UIImage{
+        let hasAlpha = true
+        let scale: CGFloat = 0.0 // Use scale factor of main screen
+        
+        UIGraphicsBeginImageContextWithOptions(sizeChange, !hasAlpha, scale)
+        self.draw(in: CGRect(origin: CGPoint.zero, size: sizeChange))
+        
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        return scaledImage!
+    }
+    
+    func cropToRect(rect: CGRect!) -> UIImage? {
+        let scaledRect = CGRect(x: rect.origin.x * self.scale,
+                                y: rect.origin.y * self.scale,
+                                width: rect.size.width * self.scale,
+                                height: rect.size.height * self.scale)
+        guard let imageRef: CGImage = self.cgImage?.cropping(to:scaledRect) else { return nil }
+
+        let croppedImage: UIImage = UIImage(cgImage: imageRef, scale: self.scale, orientation: self.imageOrientation)
+        return croppedImage
+    }
+}
+
+extension UIView {
+    public func createImage() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(
+            CGSize(width: self.frame.width, height: self.frame.height), true, 1)
+        self.layer.render(in: UIGraphicsGetCurrentContext()!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image!
+    }
+}
+
+
+extension UIAlertController {
+    static func showMessage(_ message: String) {
+        showAlert(title: "", message: message, actions: [UIAlertAction(title: "OK", style: .cancel, handler: nil)])
+    }
+    
+    static func showAlert(title: String?, message: String?, actions: [UIAlertAction]) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            for action in actions {
+                alert.addAction(action)
+            }
+            if let navigationController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController, let presenting = navigationController.topViewController {
+                presenting.present(alert, animated: true, completion: nil)
+            }
+        }
+    }
+}
+
+extension Date {
+    func dayMonthYearFormat() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter.string(from: self)
+    }
+}
+
 
 
 extension UIViewController{
@@ -148,6 +249,31 @@ extension UIViewController{
         view.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: distance).isActive = true
         view.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -distance).isActive = true
         view.topAnchor.constraint(equalTo: self.view.topAnchor, constant: (self.view.frame.height - view.frame.height)/3).isActive = true
+    }
+    
+    ///Identifier 찾기
+    func getDeviceIdentifier() -> String {
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let identifier = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8, value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+        return identifier
+    }
+    
+    func iPhone8Model() -> Bool {
+        let identifier = self.getDeviceIdentifier()
+        
+        switch identifier {
+        case "iPhone1,1", "iPhone1,2","iPhone2,1","iPhone3,1", "iPhone3,2", "iPhone3,3", "iPhone4,1" , "iPhone5,1", "iPhone5,2","iPhone5,3", "iPhone5,4","iPhone6,1", "iPhone6,2" , "iPhone7,2" ,"iPhone7,1","iPhone8,1","iPhone8,2","iPhone8,4","iPhone9,1", "iPhone9,3", "iPhone9,2", "iPhone9,4"  :
+            return true
+        case "iPhone10,1", "iPhone10,4" ,"iPhone10,2", "iPhone10,5", "iPhone10,3", "iPhone10,6" :
+            return false
+        default:
+            return false
+        }
     }
 
     // LUT Filter apply, filter 파일 코드 정리
@@ -375,303 +501,4 @@ extension UIViewController{
         let vc : [UIViewController] = self.navigationController!.viewControllers as [UIViewController]
         self.navigationController?.popToViewController(vc[vc.count - value], animated: true)
     }
-}
-
-
-extension UIView {
-    public func createImage() -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(
-            CGSize(width: self.frame.width, height: self.frame.height), true, 1)
-        self.layer.render(in: UIGraphicsGetCurrentContext()!)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image!
-    }
-}
-
-extension UIInterfaceOrientation {
-    var videoOrientation: AVCaptureVideoOrientation? {
-        switch self {
-        case .portraitUpsideDown: return .portraitUpsideDown
-        case .landscapeRight: return .landscapeRight
-        case .landscapeLeft: return .landscapeLeft
-        case .portrait: return .portrait
-        default: return nil
-        }
-    }
-}
-
-
-extension UIColor {
-    class func colorRGBHex(hex:Int, alpha: Float = 1.0) -> UIColor {
-        let r = Float((hex >> 16) & 0xFF)
-        let g = Float((hex >> 8) & 0xFF)
-        let b = Float((hex) & 0xFF)
-        return UIColor(red: CGFloat(r/255.0), green: CGFloat(g/255.0), blue:CGFloat(b/255.0), alpha : CGFloat(alpha))
-    }
-}
-
-
-extension UIImage {
-    func mergeWith(topImage: UIImage,bottomImage: UIImage) -> UIImage {
-        
-        //    let bottomImage = self
-        
-        UIGraphicsBeginImageContext(size)
-        
-        let areaSize = CGRect(x: 0, y: 0, width: bottomImage.size.width, height: bottomImage.size.height)
-        bottomImage.draw(in: areaSize)
-        
-        topImage.draw(in: areaSize, blendMode: .normal, alpha: 1.0)
-        
-        let mergedImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return mergedImage
-    }
-    
-    func resizeImage(image: UIImage, newSize: CGSize) -> (UIImage) {
-        let newRect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height).integral
-        UIGraphicsBeginImageContextWithOptions(newSize, true, 0)
-        let context = UIGraphicsGetCurrentContext()
-
-        // Set the quality level to use when rescaling
-        context!.interpolationQuality = CGInterpolationQuality.default
-        let flipVertical = CGAffineTransform(a: 1, b: 0, c: 0, d: -1, tx: 0, ty: newSize.height )
-        context!.concatenate(flipVertical)
-
-        // Draw into the context; this scales the image
-        context?.draw(image.cgImage!, in: CGRect(x: 0.0,y: 0.0, width: newRect.width, height: newRect.height))
-
-        let newImageRef = context!.makeImage()! as CGImage
-        let newImage = UIImage(cgImage: newImageRef)
-
-        // Get the resized image from the context and a UIImage
-        UIGraphicsEndImageContext()
-
-        return newImage
-    }
-    
-    func imageResize (sizeChange:CGSize)-> UIImage{
-        let hasAlpha = true
-        let scale: CGFloat = 0.0 // Use scale factor of main screen
-        
-        UIGraphicsBeginImageContextWithOptions(sizeChange, !hasAlpha, scale)
-        self.draw(in: CGRect(origin: CGPoint.zero, size: sizeChange))
-        
-        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
-        return scaledImage!
-    }
-    
-    func cropToRect(rect: CGRect!) -> UIImage? {
-        let scaledRect = CGRect(x: rect.origin.x * self.scale,
-                                y: rect.origin.y * self.scale,
-                                width: rect.size.width * self.scale,
-                                height: rect.size.height * self.scale);
-        guard let imageRef: CGImage = self.cgImage?.cropping(to:scaledRect) else { return nil }
-
-        let croppedImage: UIImage = UIImage(cgImage: imageRef, scale: self.scale, orientation: self.imageOrientation)
-        return croppedImage
-    }
-}
-
-extension UIView {
-    func addShadowEffect(){
-        self.layer.shadowRadius = 2
-        self.layer.shadowOpacity = 0.2
-        self.layer.shadowOffset = CGSize(width: 5, height: 7)
-        self.clipsToBounds = false
-    }
-    
-    func roundCorners(corners: UIRectCorner, radius: CGFloat) {
-        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        let mask = CAShapeLayer()
-        mask.path = path.cgPath
-        layer.mask = mask
-    }
-    
-    
-    func setRoundedCorner() {
-        let roundedPath = UIBezierPath.init(roundedRect: UIView().bounds, byRoundingCorners: [.topRight , .bottomLeft , .bottomRight], cornerRadii: CGSize(width: 15, height: 15))
-        let roundedLayer = CAShapeLayer()
-        roundedLayer.path = roundedPath.cgPath
-        layer.masksToBounds = true
-        layer.mask = roundedLayer
-    }
-    
-    
-    // Set Rounded View
-    func makeRounded(cornerRadius : CGFloat?){
-        
-        // UIView 의 모서리가 둥근 정도를 설정
-        if let cornerRadius_ = cornerRadius {
-            self.layer.cornerRadius = cornerRadius_
-        }  else {
-            // cornerRadius 가 nil 일 경우의 default
-            self.layer.cornerRadius = self.layer.frame.height / 2
-        }
-        
-        self.layer.masksToBounds = true
-    }
-    
-    func setBorder(borderColor : UIColor?, borderWidth : CGFloat?) {
-        
-        // UIView 의 테두리 색상 설정
-        if let borderColor_ = borderColor {
-            self.layer.borderColor = borderColor_.cgColor
-        } else {
-            // borderColor 변수가 nil 일 경우의 default
-            self.layer.borderColor = UIColor(red: 205/255, green: 209/255, blue: 208/255, alpha: 1.0).cgColor
-        }
-        
-        // UIView 의 테두리 두께 설정
-        if let borderWidth_ = borderWidth {
-            self.layer.borderWidth = borderWidth_
-        } else {
-            // borderWidth 변수가 nil 일 경우의 default
-            self.layer.borderWidth = 1.0
-        }
-    }
-}
-
-extension UIAlertController {
-    
-    static func showMessage(_ message: String) {
-        showAlert(title: "", message: message, actions: [UIAlertAction(title: "OK", style: .cancel, handler: nil)])
-    }
-    
-    static func showAlert(title: String?, message: String?, actions: [UIAlertAction]) {
-        DispatchQueue.main.async {
-            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            for action in actions {
-                alert.addAction(action)
-            }
-            if let navigationController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController, let presenting = navigationController.topViewController {
-                presenting.present(alert, animated: true, completion: nil)
-            }
-        }
-    }
-}
-
-extension Date {
-    func dayMonthYearFormat() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter.string(from: self)
-    }
-}
-
-
-extension UIViewController {
-///Identifier 찾기
-    func getDeviceIdentifier() -> String {
-        var systemInfo = utsname()
-        uname(&systemInfo)
-        let machineMirror = Mirror(reflecting: systemInfo.machine)
-        let identifier = machineMirror.children.reduce("") { identifier, element in
-            guard let value = element.value as? Int8, value != 0 else { return identifier }
-            return identifier + String(UnicodeScalar(UInt8(value)))
-        }
-        return identifier
-    }
-    /**
-     디바이스 모델 (iPhone, iPad) 이름 전달 (iPhone6, iPhone7 Plus...)
-     */
-    func deviceModelName() -> String {
-        
-        let model = UIDevice.current.model
-        
-        switch model {
-        case "iPhone":
-            return self.iPhoneModel()
-            
-        default:
-            return "Unknown Model : \(model)"
-        }
-        
-    }
-    
-    /**
-     iPhone 모델 이름 (iPhone6, iPhone7 Plus...)
-     */
-    func iPhoneModel() -> String {
-        
-        let identifier = self.getDeviceIdentifier()
-        
-        switch identifier {
-        case "iPhone1,1" :
-            return "iPhone"
-        case "iPhone1,2" :
-            return "iPhone3G"
-        case "iPhone2,1" :
-            return "iPhone3GS"
-        case "iPhone3,1", "iPhone3,2", "iPhone3,3" :
-            return "iPhone4"
-        case "iPhone4,1" :
-            return "iPhone4s"
-        case "iPhone5,1", "iPhone5,2" :
-            return "iPhone5"
-        case "iPhone5,3", "iPhone5,4" :
-            return "iPhone5c"
-        case "iPhone6,1", "iPhone6,2" :
-            return "iPhone5s"
-        case "iPhone7,2" :
-            return "iPhone6"
-        case "iPhone7,1" :
-            return "iPhone6 Plus"
-        case "iPhone8,1" :
-            return "iPhone6s"
-        case "iPhone8,2" :
-            return "iPhone6s Plus"
-        case "iPhone8,4" :
-            return "iPhone SE"
-        case "iPhone9,1", "iPhone9,3" :
-            return "iPhone7"
-        case "iPhone9,2", "iPhone9,4" :
-            return "iPhone7 Plus"
-        case "iPhone10,1", "iPhone10,4" :
-            return "iPhone8"
-        case "iPhone10,2", "iPhone10,5" :
-            return "iPhone8 Plus"
-        case "iPhone10,3", "iPhone10,6" :
-            return "iPhoneX"
-        default:
-            return "Unknown iPhone : \(identifier)"
-        }
-    }
-
-    
-    func iPhone8Model() -> Bool {
-        let identifier = self.getDeviceIdentifier()
-        
-        switch identifier {
-        case "iPhone1,1", "iPhone1,2","iPhone2,1","iPhone3,1", "iPhone3,2", "iPhone3,3", "iPhone4,1" , "iPhone5,1", "iPhone5,2","iPhone5,3", "iPhone5,4","iPhone6,1", "iPhone6,2" , "iPhone7,2" ,"iPhone7,1","iPhone8,1","iPhone8,2","iPhone8,4","iPhone9,1", "iPhone9,3", "iPhone9,2", "iPhone9,4"  :
-            return true
-        case "iPhone10,1", "iPhone10,4" ,"iPhone10,2", "iPhone10,5", "iPhone10,3", "iPhone10,6" :
-            return false
-        default:
-            return false
-        }
-    }
-}
-
-
-extension UIImageView{
-   func imageFrame() -> CGRect {
-     let imageViewSize = self.frame.size
-     guard let imageSize = self.image?.size else{return CGRect.zero}
-     let imageRatio = imageSize.width / imageSize.height
-     let imageViewRatio = imageViewSize.width / imageViewSize.height
-    
-     if imageRatio < imageViewRatio {
-        let scaleFactor = imageViewSize.height / imageSize.height
-        let width = imageSize.width * scaleFactor
-        let topLeftX = (imageViewSize.width - width) * 0.5
-        return CGRect(x: topLeftX, y: 0, width: width, height: imageViewSize.height)
-     } else {
-        let scalFactor = imageViewSize.width / imageSize.width
-        let height = imageSize.height * scalFactor
-        let topLeftY = (imageViewSize.height - height) * 0.5
-        return CGRect(x: 0, y: topLeftY, width: imageViewSize.width, height: height)
-     }
-   }
 }

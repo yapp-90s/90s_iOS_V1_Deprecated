@@ -8,16 +8,19 @@
 
 import UIKit
 
-let AlbumDatabase : AlbumModel = AlbumModel()
-let LayoutDatabase : LayoutModel = LayoutModel()
-let CoverDatabase : CoverModel = CoverModel()
-
 class LayoutModel {
-    let arrayList : [AlbumLayout] = [.Polaroid, .Mini, .Memory, .Portrab, .Tape, .Portraw, .Filmroll]
+    static let arrayList : [AlbumLayout] = [.Polaroid, .Mini, .Memory, .Portrab, .Tape, .Portraw, .Filmroll]
+    private init() {}
 }
 
 class CoverModel {
-    let arrayList : [AlbumCover] = [.Copy, .Paradiso, .HappilyEverAfter, .FavoriteThings, .AwesomeMix, .LessButBetter, .SretroClub, .OneAndOnlyCopy]
+    static let arrayList : [AlbumCover] = [.Copy, .Paradiso, .HappilyEverAfter, .FavoriteThings, .AwesomeMix, .LessButBetter, .SretroClub, .OneAndOnlyCopy]
+    private init() {}
+}
+
+class AlbumModel {
+    static var arrayList : [Album] = []
+    private init() {}
 }
 
 class Album {
@@ -39,24 +42,6 @@ class Album {
         self.albumLayout = albumLayout
         self.albumMaxCount = albumMaxCount
         self.photos = []
-    }
-}
-
-class AlbumModel {
-    var arrayList : [Album] = []
-    
-    func defaultData() -> Array<Album> {
-        let stock = Album(user: ["test@gmail.com"], albumIndex: 0, albumName: "행복한 앨범", albumStartDate: "2020-04-26", albumEndDate: "2020-05-21", albumLayout: .Portrab, albumMaxCount: 5, photo: [])
-        let stock2 = Album(user: ["test1@gmail.com"], albumIndex: 1, albumName: "여행 기록", albumStartDate: "2020-04-25", albumEndDate: "2020-06-11", albumLayout: .Filmroll, albumMaxCount: 10, photo: [])
-        return [stock, stock2]
-    }
-    
-    init() {
-        arrayList = defaultData()
-        arrayList[0].photos.append(UIImage(named: "fellinlove")!)
-        arrayList[0].photos.append(UIImage(named: "husky")!)
-        arrayList[1].photos.append(UIImage(named: "dreamy2121")!)
-        arrayList[1].photos.append(UIImage(named: "husky")!)
     }
 }
 
