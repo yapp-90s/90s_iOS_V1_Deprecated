@@ -544,9 +544,9 @@
 		6513F17324E929FD005BAA34 /* Sticker */ = {
 			isa = PBXGroup;
 			children = (
+				9B8156492500DD0D007BF6A6 /* RenderImage */,
 				6513F17424E929FD005BAA34 /* StickerData */,
 				6513F17824E929FD005BAA34 /* Sticker.storyboard */,
-				6513F17924E929FD005BAA34 /* RenderImage */,
 			);
 			path = Sticker;
 			sourceTree = "<group>";
@@ -559,16 +559,6 @@
 				6513F17724E929FD005BAA34 /* StickerLayout.xib */,
 			);
 			path = StickerData;
-			sourceTree = "<group>";
-		};
-		6513F17924E929FD005BAA34 /* RenderImage */ = {
-			isa = PBXGroup;
-			children = (
-				6513F17A24E929FD005BAA34 /* ImageCropVC.swift */,
-				6513F17B24E929FD005BAA34 /* ImageRenderVC.swift */,
-				6513F17C24E929FD005BAA34 /* SavePhotoVC.swift */,
-			);
-			path = RenderImage;
 			sourceTree = "<group>";
 		};
 		9B27E0D424FCFCB0006B13F1 /* SignNetwork */ = {
@@ -587,6 +577,16 @@
 				9B27E0D824FD0284006B13F1 /* ProfileServiceData.swift */,
 			);
 			path = ProfileNetwork;
+			sourceTree = "<group>";
+		};
+		9B8156492500DD0D007BF6A6 /* RenderImage */ = {
+			isa = PBXGroup;
+			children = (
+				6513F17A24E929FD005BAA34 /* ImageCropVC.swift */,
+				6513F17B24E929FD005BAA34 /* ImageRenderVC.swift */,
+				6513F17C24E929FD005BAA34 /* SavePhotoVC.swift */,
+			);
+			path = RenderImage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

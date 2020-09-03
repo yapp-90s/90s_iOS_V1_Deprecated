@@ -60,8 +60,9 @@ class AlbumDetailVC : UIViewController {
     // - network array
     var photoUidArray = [PhotoGetPhotosData]()
     var networkDetailAlbum : album?
+    
     var networkPhotoUidArray : [Int] = []
-    var networkPhotoUrlImageArray : [UIImage] = []
+    var networkPhotoDic : Dictionary<Int, UIImage> = [:]
     var networkHeaderName : String = "Title"
     var networkHedaerCount : Int = 0
     
@@ -203,8 +204,7 @@ extension AlbumDetailVC {
         // simulate grain by creating randomly varing speckle
         guard
             let coloredNoise = CIFilter(name:"CIRandomGenerator"),
-            let noiseImage = coloredNoise.outputImage
-            else { return image }
+            let noiseImage = coloredNoise.outputImage else { return image }
         
         // apply whitening effect noise output to CICOlorMatrix filter
         let whitenVector = CIVector(x: 0, y: 1, z: 0, w: 0)
@@ -278,7 +278,7 @@ extension AlbumDetailVC {
 /* 네트워크 함수 */
 extension AlbumDetailVC {
     func NetworkSetting(){
-        self.networkPhotoUrlImageArray = []
+        self.networkPhotoDic = [:]
         
         // 1. 앨범 정보 가져오기
         AlbumService.shared.albumGetAlbum(uid: albumUid, completion: { response in
@@ -353,12 +353,13 @@ extension AlbumDetailVC {
                                 originImage = self.setOldFilter(image: originImage)
                             }
                         }
-                        self.networkPhotoUrlImageArray.append(originImage)
+                        self.networkPhotoDic.updateValue(originImage, forKey: i)
                         self.photoCollectionView.reloadData()
                     }
                 })
             }
         }
+        
         isAlbumComplete = photoUidArray.count + 1 <= albumMaxCount ? false : true
         switchAlbumComplete(value: isAlbumComplete)
         addPhotoBtn.isHidden = isDefaultUser ? true : false
@@ -429,7 +430,7 @@ extension AlbumDetailVC {
 
 extension AlbumDetailVC : UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return networkPhotoUrlImageArray.count
+        return networkPhotoDic.count
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -451,7 +452,7 @@ extension AlbumDetailVC : UICollectionViewDataSource, UICollectionViewDelegateFl
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! PhotoCell
     
             cell.backImageView = applyBackImageViewLayout(selectedLayout: selectedLayout, smallBig: selectedLayout.size, imageView: cell.backImageView)
-            cell.backImageView.image = networkPhotoUrlImageArray[indexPath.row]
+            cell.backImageView.image = networkPhotoDic[indexPath.row]//networkPhotoUrlImageArray[indexPath.row]
     
             return cell
         }
@@ -512,7 +513,7 @@ extension AlbumDetailVC : UIImagePickerControllerDelegate, UINavigationControlle
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         var tempImage : UIImage? = nil
-        guard let fileUrl = info[UIImagePickerController.InfoKey.imageURL] as? URL else {return}
+        guard let fileUrl = info[UIImagePickerController.InfoKey.imageURL] as? URL else { return }
         ImageName = fileUrl.lastPathComponent
         
         if let url = info[UIImagePickerController.InfoKey.referenceURL] as? URL,

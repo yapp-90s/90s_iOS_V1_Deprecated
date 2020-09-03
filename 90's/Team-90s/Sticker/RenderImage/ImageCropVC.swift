@@ -15,9 +15,8 @@ class ImageCropVC: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     @IBAction func nextBtn(_ sender: UIButton) { nextVC() }
-    
-    var layoutView : UIView = UIView()
-    var layoutImageView : UIImageView = UIImageView()
+    @IBOutlet weak var layoutView: UIView!
+    @IBOutlet weak var layoutImageView: UIImageView!
     
     var layoutAbsoluteSize : CGSize = CGSize(width: 0, height: 0)
     var imageRatio : CGFloat = 0.0
@@ -67,23 +66,19 @@ extension ImageCropVC {
     }
     
     // 이미지 크기 만큼의 뷰
-    private func layoutViewSetting(){
-        layoutView.isUserInteractionEnabled = true
-        self.cropView.addSubview(layoutView)
-    
+    private func layoutViewSetting(){  
         setSubViewFrameSetting(view: cropView, subView: layoutView,
             top: (cropView.frame.height - imageSize.height) / 2,
             left: (cropView.frame.width - imageSize.width ) / 2,
             right: (cropView.frame.width - imageSize.width ) / 2,
             bottom: (cropView.frame.height - imageSize.height) / 2)
+        
         layoutView.frame.size = imageSize
     }
     
     private func layoutImageViewSetting(){
-        layoutImageView = UIImageView(image: selectedLayout.cropImage)
-        layoutImageView.isUserInteractionEnabled = true
+        layoutImageView.image = selectedLayout.cropImage
         layoutImageView.frame.size = layoutAbsoluteSize
-        self.layoutView.addSubview(layoutImageView)
         
         setSubViewFrameSetting(view: cropView, subView: layoutImageView,
             top: (cropView.frame.height - layoutImageView.frame.height) / 2,
