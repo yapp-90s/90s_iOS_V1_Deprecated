@@ -103,27 +103,23 @@ extension EnterViewController {
     //애플 로그인 버튼 클릭 시
     @available(iOS 13.0, *)
     @objc func handleAuthorizationAppleIDButtonPress(){
-        
         //revoke상태인지 확인
-        let provider = ASAuthorizationAppleIDProvider()
         if let identifier = UserDefaults.standard.string(forKey: "appleIdentifier") {
-            provider.getCredentialState(forUserID: identifier, completion: {
+            ASAuthorizationAppleIDProvider().getCredentialState(forUserID: identifier, completion: {
                 (credentialState, error) in
-                if(credentialState == .revoked){
+                if credentialState == .revoked {
                     self.isRevokedAppleId = true
                 }
             })
         }
-        
+       
         let request = ASAuthorizationAppleIDProvider().createRequest()
         request.requestedScopes = [.fullName,.email]
+        
         let controller = ASAuthorizationController(authorizationRequests: [request])
         controller.delegate = self
         controller.presentationContextProvider = self
         controller.performRequests()
-        
-        
-        
     }
     
     
@@ -249,9 +245,9 @@ extension EnterViewController {
                     UserDefaults.standard.set("", forKey: "defaultjwt")
                     isDefaultUser = false
                     //이미 가입된 애플아이디 && revoked상태 이면 탈퇴시키고 전화번호 입력화면으로 이동
-                    if(self.isRevokedAppleId){
+                    if self.isRevokedAppleId {
                         self.leave()
-                    }else {
+                    } else {
                         let appDelegate = UIApplication.shared.delegate as! AppDelegate
                         appDelegate.switchTab()
                     }
@@ -281,9 +277,9 @@ extension EnterViewController {
                     let decoder = JSONDecoder()
                     let checkEmailResult = try? decoder.decode(CheckEmailResult.self, from: data)
                     guard let isExist = checkEmailResult?.result else { return }
-                    if(isExist){
+                    if isExist {
                         self.goLogin(self.socialEmail, nil, true)
-                    }else {
+                    } else {
                         //전화번호 인증화면 이동
                         self.goAuthenView()
                     }
@@ -299,7 +295,6 @@ extension EnterViewController {
                 }
             }
         })
-        
     }
     
     func leave(){
@@ -349,10 +344,8 @@ extension EnterViewController {
         alert.addAction(action)
         self.present(alert, animated: true)
     }
-    
-    
-    
 }
+
 
 @available(iOS 13.0, *)
 extension EnterViewController : ASAuthorizationControllerDelegate,
@@ -378,7 +371,7 @@ ASAuthorizationControllerPresentationContextProviding {
                 UserDefaults.standard.set(userIdentifer, forKey: "appleIdentifier")
                 self.socialEmail = appleEmail
                 self.socialName = appleName
-            }else {
+            } else {
                 isInitialAppleLogin = false
             }
             
@@ -386,12 +379,12 @@ ASAuthorizationControllerPresentationContextProviding {
             let provider = ASAuthorizationAppleIDProvider()
             provider.getCredentialState(forUserID: userIdentifer, completion: {
                 (credentialState, error) in
-                switch(credentialState){
+                switch credentialState {
                 case .authorized:
                     //애플로 회원가입
-                    if(self.isInitialAppleLogin || self.isRevokedAppleId){
+                    if self.isInitialAppleLogin || self.isRevokedAppleId {
                         self.checkEmail()
-                    }else {
+                    } else {
                         if let savedEmail = UserDefaults.standard.string(forKey: "appleEmail") {
                             self.goLogin(savedEmail, nil, true)
                         }

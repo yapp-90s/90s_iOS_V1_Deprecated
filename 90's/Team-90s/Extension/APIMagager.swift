@@ -14,4 +14,8 @@ extension APIManager {
     static func url(_ path: String) -> String {
         return "http://49.50.162.246:443" + path
     }
+    
+    static func testUrl(_ path : String) -> String {
+        return "http://49.50.162.246:8080" + path
+    }
 }

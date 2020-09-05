@@ -60,7 +60,6 @@
                                 <constraints>
                                     <constraint firstItem="dPw-qK-IZy" firstAttribute="top" secondItem="Ssg-rK-Vza" secondAttribute="top" id="2Wt-wk-leQ"/>
                                     <constraint firstItem="KF2-eq-6vN" firstAttribute="top" secondItem="Ssg-rK-Vza" secondAttribute="top" id="A1f-ar-Ov6"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="78" id="HF0-jV-fj3"/>
                                     <constraint firstAttribute="bottom" secondItem="KF2-eq-6vN" secondAttribute="bottom" id="M3g-us-l1r"/>
                                     <constraint firstAttribute="bottom" secondItem="dPw-qK-IZy" secondAttribute="bottom" id="ROL-nk-7En"/>
                                     <constraint firstItem="dPw-qK-IZy" firstAttribute="leading" secondItem="Ssg-rK-Vza" secondAttribute="leading" id="tfN-z4-4cf"/>
@@ -87,10 +86,10 @@
                                     </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="KKl-ru-FJo" firstAttribute="leading" secondItem="dhB-qF-dwd" secondAttribute="leading" id="XSW-aI-WbB"/>
-                                    <constraint firstItem="KKl-ru-FJo" firstAttribute="top" secondItem="dhB-qF-dwd" secondAttribute="top" id="ag1-Wa-A1i"/>
-                                    <constraint firstAttribute="bottom" secondItem="KKl-ru-FJo" secondAttribute="bottom" id="ixR-WL-cxr"/>
-                                    <constraint firstAttribute="trailing" secondItem="KKl-ru-FJo" secondAttribute="trailing" id="tU9-5y-Pi1"/>
+                                    <constraint firstAttribute="bottom" secondItem="KKl-ru-FJo" secondAttribute="bottom" id="KSm-Rk-and"/>
+                                    <constraint firstAttribute="trailing" secondItem="KKl-ru-FJo" secondAttribute="trailing" id="KxD-fn-6hK"/>
+                                    <constraint firstItem="KKl-ru-FJo" firstAttribute="leading" secondItem="dhB-qF-dwd" secondAttribute="leading" id="Qee-qB-UB8"/>
+                                    <constraint firstItem="KKl-ru-FJo" firstAttribute="top" secondItem="dhB-qF-dwd" secondAttribute="top" id="jVH-cf-4xn"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="amS-Qc-RXZ" userLabel="BottomView">

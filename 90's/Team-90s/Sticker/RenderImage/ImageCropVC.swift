@@ -46,7 +46,7 @@ extension ImageCropVC {
             CGSize(width: cropView.frame.width, height: ceil(cropView.frame.width * imageRatio)) :
             CGSize(width: ceil(cropView.frame.height * imageRatio), height: cropView.frame.height)
         // 이미지 크기 조절
-        photoImageView.image = image//.imageResize(sizeChange: imageSize)
+        photoImageView.image = image.imageResize(sizeChange: imageSize)
         
         let commonLayoutSize = iPhone8Model() ?
                 selectedLayout.innerFrameLowSize : selectedLayout.innerFrameHighSize
@@ -58,6 +58,7 @@ extension ImageCropVC {
             } else if commonLayoutSize.height >= imageSize.height {
                 tempRatio = round((imageSize.height / commonLayoutSize.height) * 1000) / 1000
             }
+            
             layoutAbsoluteSize = CGSize(width: ceil(commonLayoutSize.width * tempRatio),
             height: ceil(commonLayoutSize.height * tempRatio))
         } else {
@@ -66,19 +67,32 @@ extension ImageCropVC {
     }
     
     // 이미지 크기 만큼의 뷰
-    private func layoutViewSetting(){  
+    private func layoutViewSetting() {
+//        layoutView.translatesAutoresizingMaskIntoConstraints = false
+//        layoutView.heightAnchor.constraint(equalToConstant: imageSize.height).isActive = true
+//        layoutView.widthAnchor.constraint(equalToConstant: imageSize.width).isActive = true
+//        layoutView.centerXAnchor.constraint(equalTo: cropView.centerXAnchor).isActive = true
+//        layoutView.centerYAnchor.constraint(equalTo: cropView.centerYAnchor).isActive = true
+        
         setSubViewFrameSetting(view: cropView, subView: layoutView,
             top: (cropView.frame.height - imageSize.height) / 2,
             left: (cropView.frame.width - imageSize.width ) / 2,
             right: (cropView.frame.width - imageSize.width ) / 2,
             bottom: (cropView.frame.height - imageSize.height) / 2)
-        
-        layoutView.frame.size = imageSize
     }
     
     private func layoutImageViewSetting(){
         layoutImageView.image = selectedLayout.cropImage
-        layoutImageView.frame.size = layoutAbsoluteSize
+        print(photoImageView.image)
+        print(getDeviceIdentifier())
+        print(iPhone8Model() ?
+                       selectedLayout.innerFrameLowSize : selectedLayout.innerFrameHighSize)
+//
+//        layoutImageView.translatesAutoresizingMaskIntoConstraints = false
+//        layoutImageView.heightAnchor.constraint(equalToConstant: layoutAbsoluteSize.height).isActive = true
+//        layoutImageView.widthAnchor.constraint(equalToConstant: layoutAbsoluteSize.width).isActive = true
+//        layoutImageView.centerXAnchor.constraint(equalTo: layoutView.centerXAnchor).isActive = true
+//        layoutImageView.centerYAnchor.constraint(equalTo: layoutView.centerYAnchor).isActive = true
         
         setSubViewFrameSetting(view: cropView, subView: layoutImageView,
             top: (cropView.frame.height - layoutImageView.frame.height) / 2,
