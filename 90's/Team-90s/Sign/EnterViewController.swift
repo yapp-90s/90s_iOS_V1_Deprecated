@@ -51,7 +51,6 @@ class EnterViewController: UIViewController {
     var socialName : String = ""
     var isRevokedAppleId = false
     var isAppleId = false
-    var isInitialAppleLogin = true
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -86,11 +85,12 @@ extension EnterViewController {
     func autoLogin(){
         //기존에 로그인한 데이터가 있을 경우
         if let email = UserDefaults.standard.string(forKey: "email"){
-            //소셜 로그인의 경우 애플아이디 제외 자동로그인
+            //소셜 로그인 자동로그인
             if UserDefaults.standard.bool(forKey: "social"){
-                if !UserDefaults.standard.bool(forKey: "isAppleId"){
-                    goLogin(email, nil, true)
+                if(UserDefaults.standard.bool(forKey: "isAppleId")){
+                    isAppleId = true
                 }
+                    goLogin(email, nil, true)
             } else {
                 //자체 로그인
                 guard let password = UserDefaults.standard.string(forKey: "password") else { return }
@@ -103,27 +103,23 @@ extension EnterViewController {
     //애플 로그인 버튼 클릭 시
     @available(iOS 13.0, *)
     @objc func handleAuthorizationAppleIDButtonPress(){
-        
         //revoke상태인지 확인
-        let provider = ASAuthorizationAppleIDProvider()
         if let identifier = UserDefaults.standard.string(forKey: "appleIdentifier") {
-            provider.getCredentialState(forUserID: identifier, completion: {
+            ASAuthorizationAppleIDProvider().getCredentialState(forUserID: identifier, completion: {
                 (credentialState, error) in
-                if(credentialState == .revoked){
+                if credentialState == .revoked {
                     self.isRevokedAppleId = true
                 }
             })
         }
-        
+       
         let request = ASAuthorizationAppleIDProvider().createRequest()
         request.requestedScopes = [.fullName,.email]
+        
         let controller = ASAuthorizationController(authorizationRequests: [request])
         controller.delegate = self
         controller.presentationContextProvider = self
         controller.performRequests()
-        
-        
-        
     }
     
     
@@ -175,6 +171,7 @@ extension EnterViewController {
             }
         }
     }
+    
     
     func unlinkKaKaoLogin(){
         KOSessionTask.unlinkTask(completionHandler: {
@@ -245,13 +242,12 @@ extension EnterViewController {
                     UserDefaults.standard.set(password, forKey: "password")
                     UserDefaults.standard.set(social, forKey: "social")
                     UserDefaults.standard.set(self.isAppleId, forKey: "isAppleId")
-                    
                     UserDefaults.standard.set("", forKey: "defaultjwt")
                     isDefaultUser = false
                     //이미 가입된 애플아이디 && revoked상태 이면 탈퇴시키고 전화번호 입력화면으로 이동
-                    if(self.isRevokedAppleId){
+                    if self.isRevokedAppleId {
                         self.leave()
-                    }else {
+                    } else {
                         let appDelegate = UIApplication.shared.delegate as! AppDelegate
                         appDelegate.switchTab()
                     }
@@ -281,9 +277,9 @@ extension EnterViewController {
                     let decoder = JSONDecoder()
                     let checkEmailResult = try? decoder.decode(CheckEmailResult.self, from: data)
                     guard let isExist = checkEmailResult?.result else { return }
-                    if(isExist){
+                    if isExist {
                         self.goLogin(self.socialEmail, nil, true)
-                    }else {
+                    } else {
                         //전화번호 인증화면 이동
                         self.goAuthenView()
                     }
@@ -299,7 +295,6 @@ extension EnterViewController {
                 }
             }
         })
-        
     }
     
     func leave(){
@@ -317,7 +312,7 @@ extension EnterViewController {
                 self.goAuthenView()
                 break
             case 401...500:
-                self.showErrAlert()
+                self.showLeaveErrAlert()
                 break
             default:
                 return
@@ -349,10 +344,8 @@ extension EnterViewController {
         alert.addAction(action)
         self.present(alert, animated: true)
     }
-    
-    
-    
 }
+
 
 @available(iOS 13.0, *)
 extension EnterViewController : ASAuthorizationControllerDelegate,
@@ -378,25 +371,19 @@ ASAuthorizationControllerPresentationContextProviding {
                 UserDefaults.standard.set(userIdentifer, forKey: "appleIdentifier")
                 self.socialEmail = appleEmail
                 self.socialName = appleName
-            }else {
-                isInitialAppleLogin = false
             }
             
             
             let provider = ASAuthorizationAppleIDProvider()
             provider.getCredentialState(forUserID: userIdentifer, completion: {
                 (credentialState, error) in
-                switch(credentialState){
+                switch credentialState {
                 case .authorized:
                     //애플로 회원가입
-                    if(self.isInitialAppleLogin || self.isRevokedAppleId){
-                        self.checkEmail()
-                    }else {
-                        if let savedEmail = UserDefaults.standard.string(forKey: "appleEmail") {
-                            self.goLogin(savedEmail, nil, true)
-                        }
-                    }
-                    
+                   if let savedEmail = UserDefaults.standard.string(forKey: "appleEmail") {
+                       self.socialEmail = savedEmail;
+                   }
+                   self.checkEmail()
                     break
                 @unknown default:
                     break

@@ -62,9 +62,10 @@ class ProfileVC: UIViewController {
     
     @IBAction func goLogout(_ sender: Any) {
         //저장되어있는 모든 정보를 삭제함
-        if let appDomain = Bundle.main.bundleIdentifier {
-            UserDefaults.standard.removePersistentDomain(forName: appDomain)
-        }
+//        if let appDomain = Bundle.main.bundleIdentifier {
+//            UserDefaults.standard.removePersistentDomain(forName: appDomain)
+//        }
+        self.removeSavedUserInfo()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.switchEnterView()
     }
@@ -137,6 +138,13 @@ class ProfileVC: UIViewController {
         })
     }
     
+    //로그아웃시 사용되는 메소드 - 모든 정보 지움
+      func removeSavedUserInfo(){
+          UserDefaults.standard.removeObject(forKey: "email")
+          UserDefaults.standard.removeObject(forKey: "password")
+          UserDefaults.standard.removeObject(forKey: "social")
+          UserDefaults.standard.removeObject(forKey: "jwt")
+      }
     
     func setProfileUI(_ profileResult: ProfileResult){
         //디폴트 유저는 전화번호가 nil
@@ -171,6 +179,8 @@ class ProfileVC: UIViewController {
         alert.addAction(action)
         self.present(alert, animated: true)
     }
+    
+    
     
     
 }

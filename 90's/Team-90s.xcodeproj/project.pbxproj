@@ -218,6 +218,7 @@
 		9BD486FE24E93AEB0053016B /* KakaoOpenSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KakaoOpenSDK.framework; sourceTree = "<group>"; };
 		9BD4870824E9410A0053016B /* KakaoLink.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KakaoLink.framework; sourceTree = "<group>"; };
 		9BD4870924E9410A0053016B /* KakaoMessageTemplate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KakaoMessageTemplate.framework; sourceTree = "<group>"; };
+		9BE12C53250365EA00A72A33 /* Team-90s.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Team-90s.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -278,6 +279,7 @@
 		6513F0D724E926CE005BAA34 /* Team-90s */ = {
 			isa = PBXGroup;
 			children = (
+				9BE12C53250365EA00A72A33 /* Team-90s.entitlements */,
 				6513F0FE24E929FC005BAA34 /* Album */,
 				6513F16E24E929FD005BAA34 /* Base.lproj */,
 				6513F11724E929FC005BAA34 /* Extension */,
@@ -544,9 +546,9 @@
 		6513F17324E929FD005BAA34 /* Sticker */ = {
 			isa = PBXGroup;
 			children = (
+				9B8156492500DD0D007BF6A6 /* RenderImage */,
 				6513F17424E929FD005BAA34 /* StickerData */,
 				6513F17824E929FD005BAA34 /* Sticker.storyboard */,
-				6513F17924E929FD005BAA34 /* RenderImage */,
 			);
 			path = Sticker;
 			sourceTree = "<group>";
@@ -559,16 +561,6 @@
 				6513F17724E929FD005BAA34 /* StickerLayout.xib */,
 			);
 			path = StickerData;
-			sourceTree = "<group>";
-		};
-		6513F17924E929FD005BAA34 /* RenderImage */ = {
-			isa = PBXGroup;
-			children = (
-				6513F17A24E929FD005BAA34 /* ImageCropVC.swift */,
-				6513F17B24E929FD005BAA34 /* ImageRenderVC.swift */,
-				6513F17C24E929FD005BAA34 /* SavePhotoVC.swift */,
-			);
-			path = RenderImage;
 			sourceTree = "<group>";
 		};
 		9B27E0D424FCFCB0006B13F1 /* SignNetwork */ = {
@@ -587,6 +579,16 @@
 				9B27E0D824FD0284006B13F1 /* ProfileServiceData.swift */,
 			);
 			path = ProfileNetwork;
+			sourceTree = "<group>";
+		};
+		9B8156492500DD0D007BF6A6 /* RenderImage */ = {
+			isa = PBXGroup;
+			children = (
+				6513F17A24E929FD005BAA34 /* ImageCropVC.swift */,
+				6513F17B24E929FD005BAA34 /* ImageRenderVC.swift */,
+				6513F17C24E929FD005BAA34 /* SavePhotoVC.swift */,
+			);
+			path = RenderImage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -957,6 +959,7 @@
 			baseConfigurationReference = 73A0D5CA60A001AC6308C22B /* Pods-Team-90s.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Team-90s/Team-90s.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.6;
 				DEVELOPMENT_TEAM = C7X33ZVY6P;
@@ -1005,7 +1008,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "KakaoOpenSDK-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1014,6 +1017,7 @@
 			baseConfigurationReference = 46C1320A04D1B32BB960880D /* Pods-Team-90s.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Team-90s/Team-90s.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.6;
 				DEVELOPMENT_TEAM = C7X33ZVY6P;
@@ -1062,7 +1066,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "KakaoOpenSDK-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
