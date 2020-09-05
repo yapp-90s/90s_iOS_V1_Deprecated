@@ -51,7 +51,6 @@ class EnterViewController: UIViewController {
     var socialName : String = ""
     var isRevokedAppleId = false
     var isAppleId = false
-    var isInitialAppleLogin = true
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -86,11 +85,9 @@ extension EnterViewController {
     func autoLogin(){
         //기존에 로그인한 데이터가 있을 경우
         if let email = UserDefaults.standard.string(forKey: "email"){
-            //소셜 로그인의 경우 애플아이디 제외 자동로그인
+            //소셜 로그인 자동로그인
             if UserDefaults.standard.bool(forKey: "social"){
-                if !UserDefaults.standard.bool(forKey: "isAppleId"){
                     goLogin(email, nil, true)
-                }
             } else {
                 //자체 로그인
                 guard let password = UserDefaults.standard.string(forKey: "password") else { return }
@@ -312,7 +309,7 @@ extension EnterViewController {
                 self.goAuthenView()
                 break
             case 401...500:
-                self.showErrAlert()
+                self.showLeaveErrAlert()
                 break
             default:
                 return
@@ -371,8 +368,6 @@ ASAuthorizationControllerPresentationContextProviding {
                 UserDefaults.standard.set(userIdentifer, forKey: "appleIdentifier")
                 self.socialEmail = appleEmail
                 self.socialName = appleName
-            } else {
-                isInitialAppleLogin = false
             }
             
             
@@ -382,14 +377,10 @@ ASAuthorizationControllerPresentationContextProviding {
                 switch credentialState {
                 case .authorized:
                     //애플로 회원가입
-                    if self.isInitialAppleLogin || self.isRevokedAppleId {
-                        self.checkEmail()
-                    } else {
-                        if let savedEmail = UserDefaults.standard.string(forKey: "appleEmail") {
-                            self.goLogin(savedEmail, nil, true)
-                        }
-                    }
-                    
+                   if let savedEmail = UserDefaults.standard.string(forKey: "appleEmail") {
+                       self.socialEmail = savedEmail;
+                   }
+                   self.checkEmail()
                     break
                 @unknown default:
                     break
