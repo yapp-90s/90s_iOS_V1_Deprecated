@@ -87,6 +87,9 @@ extension EnterViewController {
         if let email = UserDefaults.standard.string(forKey: "email"){
             //소셜 로그인 자동로그인
             if UserDefaults.standard.bool(forKey: "social"){
+                if(UserDefaults.standard.bool(forKey: "isAppleId")){
+                    isAppleId = true
+                }
                     goLogin(email, nil, true)
             } else {
                 //자체 로그인
@@ -238,7 +241,6 @@ extension EnterViewController {
                     UserDefaults.standard.set(password, forKey: "password")
                     UserDefaults.standard.set(social, forKey: "social")
                     UserDefaults.standard.set(self.isAppleId, forKey: "isAppleId")
-                    
                     UserDefaults.standard.set("", forKey: "defaultjwt")
                     isDefaultUser = false
                     //이미 가입된 애플아이디 && revoked상태 이면 탈퇴시키고 전화번호 입력화면으로 이동
