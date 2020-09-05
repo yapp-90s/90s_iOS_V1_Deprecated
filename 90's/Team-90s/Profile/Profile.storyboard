@@ -399,7 +399,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="정말 90’s를 떠나실 건가요?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xtu-gq-jJJ">
-                                        <rect key="frame" x="65" y="224.66666666666666" width="284" height="31"/>
+                                        <rect key="frame" x="65" y="224.66666666666663" width="284" height="31"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="284" id="Vbq-8H-Gqq"/>
                                             <constraint firstAttribute="height" constant="31" id="g8d-hY-2Xo"/>
