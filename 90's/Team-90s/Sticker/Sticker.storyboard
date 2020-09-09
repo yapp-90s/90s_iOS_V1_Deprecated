@@ -130,7 +130,6 @@
                         <outlet property="layoutImageView" destination="lg6-2u-WeQ" id="9Iw-Tj-bQI"/>
                         <outlet property="layoutView" destination="WFV-Is-AtI" id="fRP-n2-FBD"/>
                         <outlet property="photoImageView" destination="KKl-ru-FJo" id="ADa-k3-zxo"/>
-                        <outlet property="topView" destination="Ssg-rK-Vza" id="b1M-OR-tGX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tgh-TF-nIF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
