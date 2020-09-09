@@ -18,6 +18,7 @@ class LeaveReasonViewController: UIViewController {
     @IBOutlet weak var leaveBtn:UIButton!
     
     var reasonClickFlag = false
+    var delegate : profileCloseResignViewProtocol?
     
     let reasonArray = ["사용하기 어려워요", "오류가 많아서 불편해요", "흥미가 없어졌어요","기타"]
     var selectedIndexPath:IndexPath?
@@ -27,7 +28,8 @@ class LeaveReasonViewController: UIViewController {
         setUI()
     }
     
-    @IBAction func clickCloseBtn(_ sender: Any) {
+    @IBAction func clickCloseBtn(_ sender: UIButton) {
+        self.delegate?.closeResignView()
         dismiss(animated: true)
     }
     
