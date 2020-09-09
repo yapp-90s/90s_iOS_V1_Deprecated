@@ -18,6 +18,7 @@ class ImageCropVC: UIViewController {
     @IBOutlet weak var layoutView: UIView!
     @IBOutlet weak var layoutImageView: UIImageView!
     
+ 
     var layoutAbsoluteSize : CGSize = CGSize(width: 0, height: 0)
     var imageRatio : CGFloat = 0.0
     var imageSize : CGSize = CGSize(width: 0, height: 0)
@@ -43,10 +44,10 @@ extension ImageCropVC {
         imageRatio = min(image.size.width / image.size.height, image.size.height / image.size.width)
         // 이미지 크기 지정
         imageSize = image.size.width > image.size.height ?
-            CGSize(width: cropView.frame.width, height: ceil(cropView.frame.width * imageRatio)) :
+            CGSize(width: view.frame.width, height: ceil(view.frame.width * imageRatio)) :
             CGSize(width: ceil(cropView.frame.height * imageRatio), height: cropView.frame.height)
         // 이미지 크기 조절
-        photoImageView.image = image.imageResize(sizeChange: imageSize)
+        photoImageView.image = image
         
         let commonLayoutSize = iPhone8Model() ?
                 selectedLayout.innerFrameLowSize : selectedLayout.innerFrameHighSize
@@ -66,39 +67,29 @@ extension ImageCropVC {
         }
     }
     
+    
     // 이미지 크기 만큼의 뷰
     private func layoutViewSetting() {
-//        layoutView.translatesAutoresizingMaskIntoConstraints = false
-//        layoutView.heightAnchor.constraint(equalToConstant: imageSize.height).isActive = true
-//        layoutView.widthAnchor.constraint(equalToConstant: imageSize.width).isActive = true
-//        layoutView.centerXAnchor.constraint(equalTo: cropView.centerXAnchor).isActive = true
-//        layoutView.centerYAnchor.constraint(equalTo: cropView.centerYAnchor).isActive = true
+        layoutView.translatesAutoresizingMaskIntoConstraints = false
+        layoutView.frame.size = imageSize
         
-        setSubViewFrameSetting(view: cropView, subView: layoutView,
-            top: (cropView.frame.height - imageSize.height) / 2,
-            left: (cropView.frame.width - imageSize.width ) / 2,
-            right: (cropView.frame.width - imageSize.width ) / 2,
-            bottom: (cropView.frame.height - imageSize.height) / 2)
+        layoutView.heightAnchor.constraint(equalToConstant: imageSize.height).isActive = true
+        layoutView.widthAnchor.constraint(equalToConstant: imageSize.width).isActive = true
+        layoutView.centerXAnchor.constraint(equalTo: cropView.centerXAnchor).isActive = true
+        layoutView.centerYAnchor.constraint(equalTo: cropView.centerYAnchor).isActive = true
     }
     
     private func layoutImageViewSetting(){
         layoutImageView.image = selectedLayout.cropImage
-        print(photoImageView.image)
-        print(getDeviceIdentifier())
-        print(iPhone8Model() ?
-                       selectedLayout.innerFrameLowSize : selectedLayout.innerFrameHighSize)
-//
-//        layoutImageView.translatesAutoresizingMaskIntoConstraints = false
-//        layoutImageView.heightAnchor.constraint(equalToConstant: layoutAbsoluteSize.height).isActive = true
-//        layoutImageView.widthAnchor.constraint(equalToConstant: layoutAbsoluteSize.width).isActive = true
-//        layoutImageView.centerXAnchor.constraint(equalTo: layoutView.centerXAnchor).isActive = true
-//        layoutImageView.centerYAnchor.constraint(equalTo: layoutView.centerYAnchor).isActive = true
-        
-        setSubViewFrameSetting(view: cropView, subView: layoutImageView,
-            top: (cropView.frame.height - layoutImageView.frame.height) / 2,
-            left: (cropView.frame.width - layoutImageView.frame.width ) / 2,
-            right: (cropView.frame.width - layoutImageView.frame.width ) / 2,
-            bottom: (cropView.frame.height - layoutImageView.frame.height) / 2)
+        layoutImageView.translatesAutoresizingMaskIntoConstraints = false
+        layoutImageView.frame.size = layoutAbsoluteSize
+
+        if view.frame.width < 414 { //iphone 8
+            layoutImageView.heightAnchor.constraint(equalToConstant: layoutAbsoluteSize.height).isActive = true
+            layoutImageView.widthAnchor.constraint(equalToConstant: layoutAbsoluteSize.width).isActive = true
+        }
+        layoutImageView.centerXAnchor.constraint(equalTo: layoutView.centerXAnchor).isActive = true
+        layoutImageView.centerYAnchor.constraint(equalTo: layoutView.centerYAnchor).isActive = true
         
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(panGesture:)))
         let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinchGesture(pinchGesture:)))
@@ -141,7 +132,7 @@ extension ImageCropVC {
         }
         
         // 좌우 조절
-        if senderView.frame.origin.x + senderView.frame.size.width > view.frame.width {
+        if senderView.frame.origin.x + senderView.frame.size.width >= view.frame.width {
             senderView.frame.origin = CGPoint(x: view.frame.width - senderView.frame.size.width, y: senderView.frame.origin.y)
         }
         if senderView.frame.origin.x < view.frame.origin.x {
