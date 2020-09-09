@@ -84,8 +84,10 @@ extension ImageCropVC {
         layoutImageView.translatesAutoresizingMaskIntoConstraints = false
         layoutImageView.frame.size = layoutAbsoluteSize
 
-        layoutImageView.heightAnchor.constraint(equalToConstant: layoutAbsoluteSize.height).isActive = true
-        layoutImageView.widthAnchor.constraint(equalToConstant: layoutAbsoluteSize.width).isActive = true
+        if view.frame.width < 414 { //iphone 8
+            layoutImageView.heightAnchor.constraint(equalToConstant: layoutAbsoluteSize.height).isActive = true
+            layoutImageView.widthAnchor.constraint(equalToConstant: layoutAbsoluteSize.width).isActive = true
+        }
         layoutImageView.centerXAnchor.constraint(equalTo: layoutView.centerXAnchor).isActive = true
         layoutImageView.centerYAnchor.constraint(equalTo: layoutView.centerYAnchor).isActive = true
         
