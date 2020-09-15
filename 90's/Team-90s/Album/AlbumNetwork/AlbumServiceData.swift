@@ -13,7 +13,7 @@ struct album : Codable {
     var name : String
     var password : String
     var photoLimit : Int
-    var layoutUid : Int
+//    var layoutUid : Int
     var count : Int // 앨범 낡기
     var orderStatus: OrderStatus
     var cover: albumCover

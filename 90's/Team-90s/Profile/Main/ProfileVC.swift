@@ -9,7 +9,11 @@
 import UIKit
 
 
-class ProfileVC: UIViewController {
+protocol profileCloseResignViewProtocol {
+    func closeResignView()
+}
+
+class ProfileVC : UIViewController  {
     @IBOutlet weak var guestView: UIView!
     @IBOutlet weak var profileView: UIView!
     // guestView
@@ -31,10 +35,9 @@ class ProfileVC: UIViewController {
     
     @IBOutlet weak var topConstraint: NSLayoutConstraint!
     
-    
     let menuArr : [String] = ["주문 내역", "내 정보 관리", "FAQ", "설정"]
     var isDefault = true
-    
+    let tabCoverImage : UIImageView = UIImageView(image: UIImage(named: "rectangleBlackopacity"))
     
     override func viewWillAppear(_ animated: Bool) {
         setUI()
@@ -43,6 +46,8 @@ class ProfileVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
+        self.tabBarController?.tabBar.addSubview(tabCoverImage)
+        tabCoverImage.isHidden = true
         
         // iPhone X..
         if UIScreen.main.nativeBounds.height >= 1792.0 {
@@ -62,18 +67,16 @@ class ProfileVC: UIViewController {
     
     @IBAction func goLogout(_ sender: Any) {
         //저장되어있는 모든 정보를 삭제함
-//        if let appDomain = Bundle.main.bundleIdentifier {
-//            UserDefaults.standard.removePersistentDomain(forName: appDomain)
-//        }
-        self.removeSavedUserInfo()
+        if let appDomain = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: appDomain)
+        }
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.switchEnterView()
     }
     
     //프로필 메인 - 회원탈퇴 버튼 클릭 시
     @IBAction func goLeave(_ sender: Any) {
-        let tabCoverImg = UIImageView(image: UIImage(named: "rectangleBlackopacity"))
-        self.tabBarController?.tabBar.addSubview(tabCoverImg)
+        tabCoverImage.isHidden = false
         rethinkBtn.layer.cornerRadius = 8.0
         leaveView.isHidden = false
     }
@@ -82,26 +85,28 @@ class ProfileVC: UIViewController {
     @IBAction func closeBtn(_ sender: Any) {
         self.tabBarController?.tabBar.subviews.last!.removeFromSuperview()
         leaveView.isHidden = true
-        
     }
     
-    //탈퇴 뷰 - 생각해볼게요 버튼 클릭 시 액션
-    @IBAction func clickThinkBtn(_ sender: Any) {
-        self.tabBarController?.tabBar.subviews.last!.removeFromSuperview()
-        leaveView.isHidden = true
-    }
     
     //탈퇴뷰 - 회원탈퇴 버튼 클릭 시 액션
     @IBAction func clickLeaveBtn(_ sender: Any) {
         //애플아이디일 경우 탈퇴 불가 -> 아이폰 설정에서 앱과 연결 끊을 시 자동탈퇴되도록 자체 탈퇴 막음
         if UserDefaults.standard.bool(forKey: "isAppleId") {
             showCannotLeaveAlert()
-        }else {
+        } else {
             let leaveReasonVC = storyboard?.instantiateViewController(withIdentifier: "LeaveReasonViewController") as! LeaveReasonViewController
+            leaveReasonVC.delegate = self
             leaveReasonVC.modalPresentationStyle = .fullScreen
             self.present(leaveReasonVC, animated: true, completion: nil)
         }
         
+    }
+}
+
+extension ProfileVC : profileCloseResignViewProtocol {
+    func closeResignView() {
+        tabCoverImage.isHidden = true
+        leaveView.isHidden = true
     }
     
     func setUI(){
@@ -138,14 +143,6 @@ class ProfileVC: UIViewController {
         })
     }
     
-    //로그아웃시 사용되는 메소드 - 모든 정보 지움
-      func removeSavedUserInfo(){
-          UserDefaults.standard.removeObject(forKey: "email")
-          UserDefaults.standard.removeObject(forKey: "password")
-          UserDefaults.standard.removeObject(forKey: "social")
-          UserDefaults.standard.removeObject(forKey: "jwt")
-      }
-    
     func setProfileUI(_ profileResult: ProfileResult){
         //디폴트 유저는 전화번호가 nil
         
@@ -156,7 +153,7 @@ class ProfileVC: UIViewController {
             profileName.text = profileResult.userInfo.name
             isDefault = false
             guestView.isHidden = true
-        }else {
+        } else {
             logoutBtn.isHidden = true
             leaveBtn.isHidden = true
             profileView.isHidden = true
@@ -179,10 +176,6 @@ class ProfileVC: UIViewController {
         alert.addAction(action)
         self.present(alert, animated: true)
     }
-    
-    
-    
-    
 }
 
 

@@ -107,7 +107,8 @@ class OrderDetailViewController: UIViewController {
         albumImageView.image = getCoverByUid(value: orderData.album.cover.uid)
         albumNameLabel.text = orderData.album.name
         
-        let layoutName = getLayoutByUid(value: orderData.album.layoutUid).layoutName
+//        let layoutName = getLayoutByUid(value: orderData.album.layoutUid).layoutName
+        let layoutName = getLayoutByUid(value: 0).layoutName
         let paperType = orderData.paperType1.uid
         let shipType = orderData.postType.uid
         
