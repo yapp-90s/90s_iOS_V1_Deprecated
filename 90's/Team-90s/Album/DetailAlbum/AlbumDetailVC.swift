@@ -291,7 +291,8 @@ extension AlbumDetailVC {
                     self.networkHeaderName = value.name
                     self.albumMaxCount = value.photoLimit
                     self.isAlbumComplete = value.complete
-                    self.selectedLayout = self.getLayoutByUid(value: value.layoutUid)
+//                    self.selectedLayout = self.getLayoutByUid(value: value.layoutUid)
+                    self.selectedLayout = self.getLayoutByUid(value: 0)
                     self.hideImageZoom.frame.size = CGSize(
                         width: self.setZoomImageView(layout: self.selectedLayout).width - 60,
                         height: self.setZoomImageView(layout: self.selectedLayout).height - 60)
