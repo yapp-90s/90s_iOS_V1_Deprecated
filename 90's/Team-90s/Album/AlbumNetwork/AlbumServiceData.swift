@@ -13,10 +13,10 @@ struct album : Codable {
     var name : String
     var password : String
     var photoLimit : Int
-//    var layoutUid : Int
     var count : Int // 앨범 낡기
-    var orderStatus: OrderStatus
-    var cover: albumCover
+    var orderStatus : OrderStatus
+    var cover : albumCover
+    var layout : Int
     var endDate : String
     var created_at : String
     var updated_at : String
@@ -43,19 +43,6 @@ struct AlbumCreateData : Codable {
     var layoutUid : Int
     var name : String
     var photoLimit : Int
-}
-
-// post
-struct AlbumCreateResult : Codable {
-    var complete : Bool
-    var count : Int
-    var created_at : String
-    var endDate : String
-    var layoutUid : Int
-    var name : String
-    var photoLimit : Int
-    var uid : Int
-    var updated_at : String
 }
 
 // post
