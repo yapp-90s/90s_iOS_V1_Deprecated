@@ -9,7 +9,6 @@ import UIKit
 
 class ImageRenderVC: UIViewController {
     @IBOutlet weak var topView: UIView!
-//    @IBOutlet weak var saveView: UIView!
     @IBOutlet weak var focusView: UIView!
     @IBOutlet weak var renderImage: UIImageView!
     @IBOutlet weak var layoutImage: UIImageView!
@@ -35,6 +34,7 @@ class ImageRenderVC: UIViewController {
     var originalWidth = CGFloat(0)
     var widthConstant : NSLayoutConstraint!
     var heightConstant : NSLayoutConstraint!
+   
     fileprivate var sticker : StickerLayout?
     fileprivate var stickerArray : [StickerLayout] = []
     fileprivate var initialAngle = CGFloat(), saveAngle = CGFloat(), saveSize = CGFloat(), initialSize = CGFloat()
@@ -63,49 +63,20 @@ class ImageRenderVC: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first
-        if focusView.isHidden == false {
-            if touch?.view == focusView {
-                focusView.isHidden = true
-            }
-        }
       
         if sticker != nil {
             self.initialAngle = pToA(touch!)
-            if touch?.view == sticker?.backImageView {
-                focusView.isHidden = false
-            }
         }
     }
+    
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first
 
         if sticker != nil {
-            switch touch!.view {
-            case sticker?.resizeImageView :
-                let position = touch!.location(in: self.view)
-                let previousPosition = touch!.previousLocation(in: self.view)
-                let Xdistance = pow(sticker!.center.x - position.x, 2)
-                let Ydistance = pow(sticker!.center.y - position.y, 2)
-                saveSize = (Xdistance + Ydistance).squareRoot()
-                let newWidth = saveSize - initialSize
-                print("origin - \(initialSize), change = \(saveSize), re = \(sticker!.resizeImageView.center)")
-                
-                let ang = pToA(touch!) - initialAngle
-                let absoluteAngle = saveAngle + ang
-                
-                let scale = CGAffineTransform(scaleX: saveSize, y: saveSize)
-                let rotate = CGAffineTransform(rotationAngle: absoluteAngle)
-                
-                saveAngle = absoluteAngle
-                sticker?.transform = rotate
-                //sticker?.transform = scale.concatenating(rotate)
-            case sticker?.cancleImageView :
+            if touch!.view == sticker?.cancleImageView {
                 sticker?.removeFromSuperview()
-                focusView.isHidden = true
                 sticker = nil
-            default :
-                break
             }
         }
     }
@@ -172,14 +143,15 @@ extension ImageRenderVC {
         sticker!.center = CGPoint(x: view.center.x - 30, y: view.center.y - 200)
         createGesture(view: sticker!.backImageView)
         
-        let pan = UIPanGestureRecognizer(target: self, action: #selector(handleResizePanGesture(panGesture:)))
-        sticker?.resizeImageView.addGestureRecognizer(pan)
-        focusView.isHidden = false
+        let resizePan = UIPanGestureRecognizer(target: self, action: #selector(handleResizePanGesture(panGesture:)))
+        sticker?.resizeImageView.addGestureRecognizer(resizePan)
         self.layoutImage.addSubview(sticker!)
+        
         widthConstant = sticker!.widthAnchor.constraint(equalToConstant: 120)
-        widthConstant.isActive = true
         heightConstant = sticker!.heightAnchor.constraint(equalToConstant: 120)
+        widthConstant.isActive = true
         heightConstant.isActive = true
+        
         let Xdistance = pow(sticker!.center.x - sticker!.resizeImageView.center.x, 2)
         let Ydistance = pow(sticker!.center.y - sticker!.resizeImageView.center.y, 2)
         initialSize = (Xdistance + Ydistance).squareRoot()
@@ -233,17 +205,18 @@ extension ImageRenderVC {
     }
     
     @objc private func handleResizePanGesture(panGesture : UIPanGestureRecognizer){
-        if panGesture.state == .began {
-            startPosition = panGesture.location(in: self.view)
-            originalWidth = widthConstant.constant
-        }
-        if panGesture.state == .changed {
-            let endPosition = panGesture.location(in: self.view)
-            let diff = max(startPosition.x - endPosition.x, startPosition.y - endPosition.y)
-            let newWidth = originalWidth - diff
-            
-            widthConstant.constant = newWidth
-        }
+        let transition = panGesture.translation(in: sticker)
+        let location = panGesture.location(in: self.view)
+        print("location = \(location), sticker = \(sticker?.frame.size)")
+        let size = min((location.x / sticker!.center.x), (location.y / sticker!.center.y))
+        let scale = CGAffineTransform(scaleX: size, y: size)
+        
+        let c = sticker!.convert(sticker!.center, from:sticker!.superview!)
+        let ang = atan2(location.y - c.y, location.x - c.x) - initialAngle
+        let absoluteAngle = saveAngle + ang
+                         
+        saveAngle = absoluteAngle
+        sticker?.transform = scale.concatenating(CGAffineTransform(rotationAngle: ang))
     }
     
     @objc private func handlePinchGesture(pinchGesture : UIPinchGestureRecognizer){
