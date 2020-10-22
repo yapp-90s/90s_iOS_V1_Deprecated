@@ -137,8 +137,7 @@ class OptionViewController : UIViewController {
         dateLabel.text = startDateStr + "~" + endDateStr
         photoCountLabel.text = "\(photoCount!)/\(albumInfo.photoLimit)"
         coverNameLabel.text = albumInfo.cover.name
-//        layoutName = self.getLayoutByUid(value: albumInfo.layoutUid).layoutName
-        layoutName = self.getLayoutByUid(value: 0).layoutName
+        layoutName = self.getLayoutByUid(value: albumInfo.layout).layoutName
         layoutLabel.text = layoutName
         
         

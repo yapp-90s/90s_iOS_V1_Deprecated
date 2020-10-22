@@ -93,8 +93,8 @@ extension AlbumInfoVC : albumInfoDeleteProtocol {
         albumNameLabel.text = data.name
         albumDateLabel.text = "\(data.created_at.split(separator: "T").first!)  ~ \(data.endDate)"
         albumCountLabel.text = "\(data.photoLimit)"
-//        albumLayoutLabel.text = getLayoutByUid(value: data.layoutUid).layoutName
-        albumLayoutLabel.text = getLayoutByUid(value: 0).layoutName
+        albumLayoutLabel.text = getLayoutByUid(value: data.layout).layoutName
+      
         
         memberTableView.delegate = self
         memberTableView.dataSource = self
