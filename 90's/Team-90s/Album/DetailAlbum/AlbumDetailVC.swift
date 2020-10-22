@@ -361,8 +361,8 @@ extension AlbumDetailVC {
         }
         
         isAlbumComplete = photoUidArray.count + 1 <= albumMaxCount ? false : true
-        switchAlbumComplete(value: isAlbumComplete)
         addPhotoBtn.isHidden = isDefaultUser ? true : false
+        switchAlbumComplete(value: isAlbumComplete)
     }
     
     // 앨범 완성 후 - 앨범 낡기 적용
@@ -440,7 +440,7 @@ extension AlbumDetailVC : UICollectionViewDataSource, UICollectionViewDelegateFl
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "albumdetailheadercell", for: indexPath) as! DetailAbumCell
         header.albumTitle.text = networkHeaderName
-        header.albumCount.text = "\(networkHedaerCount) 개의 추억이 쌓였습니다"
+        header.albumCount.text = "\(photoUidArray.count) 개의 추억이 쌓였습니다"
         return header
     }
     

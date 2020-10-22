@@ -30,6 +30,7 @@ class AlbumMainVC : UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        print("Main - view will appear")
         networkSetting()
         self.tabBarController?.tabBar.isHidden = false
     }
@@ -64,6 +65,7 @@ extension AlbumMainVC {
     
     func networkSetting(){
         AlbumService.shared.resetToken()
+        self.albumCollectionView.reloadData()
         AlbumService.shared.albumGetAlbums(completion: { response in
             if let status = response.response?.statusCode {
                 switch status {
