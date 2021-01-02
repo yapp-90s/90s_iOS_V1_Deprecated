@@ -130,8 +130,8 @@ extension ImageCropVC {
         }
         
         // 좌우 조절
-        if senderView.frame.origin.x + senderView.frame.size.width >= view.frame.width {
-            senderView.frame.origin = CGPoint(x: view.frame.width - senderView.frame.size.width, y: senderView.frame.origin.y)
+        if senderView.frame.origin.x + senderView.frame.size.width >= layoutView.frame.width {
+            senderView.frame.origin = CGPoint(x: layoutView.frame.width - senderView.frame.size.width, y: senderView.frame.origin.y)
         }
         if senderView.frame.origin.x < view.frame.origin.x {
             senderView.frame.origin = CGPoint(x: view.frame.origin.x, y: senderView.frame.origin.y)
