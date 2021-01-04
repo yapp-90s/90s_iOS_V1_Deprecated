@@ -37,33 +37,13 @@ class ImageCropVC: UIViewController {
 
 extension ImageCropVC {
     private func defaultSetting(){
-        /**
-            1. 이미지 크기를 폰 화면과 비슷하게 만든다
-            2. 한단계 축소하기
-         */
-        // 이미지 비율 구하기
-        imageRatio = min(image.size.width / image.size.height, image.size.height / image.size.width)
-        // 이미지 크기 지정
-        imageSize = image.size.width > image.size.height ?
-            CGSize(width: view.frame.width, height: ceil(view.frame.width * imageRatio)) :
-            CGSize(width: ceil(cropView.frame.height * imageRatio), height: cropView.frame.height)
         // 이미지 크기 조절
-        photoImageView.image = image
+        let ratio = min(cropView.frame.width / image.size.width, cropView.frame.height / image.size.height)
+        imageSize = CGSize(width: image.size.width * ratio, height: image.size.height * ratio)
         
-        let commonLayoutSize = iPhone8Model() ?
+        photoImageView.image = image
+        layoutAbsoluteSize = iPhone8Model() ?
                 selectedLayout.innerFrameLowSize : selectedLayout.innerFrameHighSize
-//        var tempRatio : CGFloat = CGFloat()
-//        if commonLayoutSize.width >= imageSize.width || commonLayoutSize.height >= imageSize.height {
-//            if commonLayoutSize.width >= imageSize.width  {
-//                tempRatio = round((imageSize.width / commonLayoutSize.width) * 1000) / 1000
-//            } else if commonLayoutSize.height >= imageSize.height {
-//                tempRatio = round((imageSize.height / commonLayoutSize.height) * 1000) / 1000
-//            }
-//            layoutAbsoluteSize = CGSize(width: ceil(commonLayoutSize.width * tempRatio),
-//            height: ceil(commonLayoutSize.height * tempRatio))
-//        } else {
-        layoutAbsoluteSize = commonLayoutSize
-//        }
     }
     
     // 이미지 크기 만큼의 뷰
