@@ -17,7 +17,6 @@ class ImageCropVC: UIViewController {
     @IBAction func nextBtn(_ sender: UIButton) { nextVC() }
     @IBOutlet weak var layoutView: UIView!
     @IBOutlet weak var layoutImageView: UIImageView!
-    
  
     var layoutAbsoluteSize : CGSize = CGSize(width: 0, height: 0)
     var imageRatio : CGFloat = 0.0
@@ -28,7 +27,6 @@ class ImageCropVC: UIViewController {
     var albumUid : Int = 0
     var imageName : String = ""
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         defaultSetting()
@@ -36,37 +34,17 @@ class ImageCropVC: UIViewController {
         layoutImageViewSetting()
     }
 }
- 
 
 extension ImageCropVC {
     private func defaultSetting(){
-        // 이미지 비율 구하기
-        imageRatio = min(image.size.width / image.size.height, image.size.height / image.size.width)
-        // 이미지 크기 지정
-        imageSize = image.size.width > image.size.height ?
-            CGSize(width: view.frame.width, height: ceil(view.frame.width * imageRatio)) :
-            CGSize(width: ceil(cropView.frame.height * imageRatio), height: cropView.frame.height)
         // 이미지 크기 조절
-        photoImageView.image = image
+        let ratio = min(cropView.frame.width / image.size.width, cropView.frame.height / image.size.height)
+        imageSize = CGSize(width: image.size.width * ratio, height: image.size.height * ratio)
         
-        let commonLayoutSize = iPhone8Model() ?
+        photoImageView.image = image
+        layoutAbsoluteSize = iPhone8Model() ?
                 selectedLayout.innerFrameLowSize : selectedLayout.innerFrameHighSize
-        var tempRatio : CGFloat = CGFloat()
-       
-        if commonLayoutSize.width >= imageSize.width || commonLayoutSize.height >= imageSize.height {
-            if commonLayoutSize.width >= imageSize.width  {
-                tempRatio = round((imageSize.width / commonLayoutSize.width) * 1000) / 1000
-            } else if commonLayoutSize.height >= imageSize.height {
-                tempRatio = round((imageSize.height / commonLayoutSize.height) * 1000) / 1000
-            }
-            
-            layoutAbsoluteSize = CGSize(width: ceil(commonLayoutSize.width * tempRatio),
-            height: ceil(commonLayoutSize.height * tempRatio))
-        } else {
-            layoutAbsoluteSize = commonLayoutSize
-        }
     }
-    
     
     // 이미지 크기 만큼의 뷰
     private func layoutViewSetting() {
@@ -84,10 +62,10 @@ extension ImageCropVC {
         layoutImageView.translatesAutoresizingMaskIntoConstraints = false
         layoutImageView.frame.size = layoutAbsoluteSize
 
-        if view.frame.width < 414 { //iphone 8
+//    if view.frame.width < 414 { //iphone 8
             layoutImageView.heightAnchor.constraint(equalToConstant: layoutAbsoluteSize.height).isActive = true
             layoutImageView.widthAnchor.constraint(equalToConstant: layoutAbsoluteSize.width).isActive = true
-        }
+//        }
         layoutImageView.centerXAnchor.constraint(equalTo: layoutView.centerXAnchor).isActive = true
         layoutImageView.centerYAnchor.constraint(equalTo: layoutView.centerYAnchor).isActive = true
         
@@ -132,8 +110,8 @@ extension ImageCropVC {
         }
         
         // 좌우 조절
-        if senderView.frame.origin.x + senderView.frame.size.width >= view.frame.width {
-            senderView.frame.origin = CGPoint(x: view.frame.width - senderView.frame.size.width, y: senderView.frame.origin.y)
+        if senderView.frame.origin.x + senderView.frame.size.width >= layoutView.frame.width {
+            senderView.frame.origin = CGPoint(x: layoutView.frame.width - senderView.frame.size.width, y: senderView.frame.origin.y)
         }
         if senderView.frame.origin.x < view.frame.origin.x {
             senderView.frame.origin = CGPoint(x: view.frame.origin.x, y: senderView.frame.origin.y)
